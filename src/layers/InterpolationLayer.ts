@@ -3,7 +3,6 @@ import { Model, Geometry } from '@luma.gl/engine';
 
 /**
  * Custom IDW Interpolation Layer for Deck.gl v9
- * Renders a full-screen quad and performs IDW interpolation in the fragment shader
  */
 
 export interface InterpolationLayerProps extends LayerProps {
@@ -34,11 +33,8 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
   static layerName = 'InterpolationLayer';
   static defaultProps = defaultProps;
 
+  // Explicitly declare state with the correct type for Deck.gl v9
   state!: InterpolationLayerState;
-
-  constructor(props: InterpolationLayerProps) {
-    super(props);
-  }
 
   getShaders() {
     return {
@@ -96,7 +92,7 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
   }
 
   initializeState() {
-    const { device } = this.context;
+    const { device } = this.context as any;
     this.setState({
       model: this._getModel(device),
       uPositions: [],
@@ -105,18 +101,19 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
     });
   }
 
-  updateState({ props, changeFlags }: UpdateParameters<this>) {
+  updateState(params: UpdateParameters<InterpolationLayer>) {
+    const { props, changeFlags } = params;
     if (changeFlags.dataChanged || changeFlags.viewportChanged) {
       const { data, getPosition, getValue } = props;
-      const { viewport } = this.context;
+      const { viewport } = this.context as any;
       if (!data || data.length === 0 || !viewport) return;
 
       const uPositions: number[] = [];
       const uValues: number[] = [];
       
       data.slice(0, 100).forEach((d: any) => {
-        const [lng, lat] = getPosition!(d);
-        const [x, y] = viewport.project([lng, lat]);
+        const coords = getPosition!(d);
+        const [x, y] = viewport.project(coords);
         uPositions.push(x / viewport.width, 1.0 - (y / viewport.height));
         uValues.push(getValue!(d));
       });
@@ -132,18 +129,30 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
   draw({ uniforms }: any) {
     const { model, uPositions, uValues, uCount } = this.state;
     const { p, colorRange } = this.props;
-    const { viewport } = this.context;
 
     if (model && uCount > 0) {
-      model.setUniforms({
-        ...uniforms,
-        uPositions,
-        uValues,
-        int_uCount: uCount,
-        float_uP: p!,
-        vec3_uColors: colorRange!.flat(),
-        uViewport: [0, 0, viewport.width, viewport.height]
-      });
+      // In luma.gl v9, setProps is used on the model
+      const shaderInputs = (model as any).shaderInputs;
+      if (shaderInputs) {
+        shaderInputs.setProps({
+          ...uniforms,
+          uPositions,
+          uValues,
+          int_uCount: uCount,
+          float_uP: p!,
+          vec3_uColors: colorRange!.flat()
+        });
+      } else {
+        // Fallback for types that might still use setUniforms
+        (model as any).setUniforms({
+          ...uniforms,
+          uPositions,
+          uValues,
+          int_uCount: uCount,
+          float_uP: p!,
+          vec3_uColors: colorRange!.flat()
+        });
+      }
       model.draw(this.context.renderPass);
     }
   }

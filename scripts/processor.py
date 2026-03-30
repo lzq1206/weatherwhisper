@@ -117,7 +117,9 @@ def process_station(epw_path):
         "total_solar": round(float(df['Solar'].sum() / 1000), 2), # kWh/m2
         "avg_cloud": round(float(df['Cloud'].mean()), 1),
         "growing_season": growing_days,
-        "best_time": get_best_time(monthly_json)
+        "best_time": get_best_time(monthly_json),
+        "water_temp": round(float(df['Temp'].mean() + 1.5), 1), # Proxy estimation
+        "solar_energy": round(float(df['Solar'].sum() / 1000 * 0.15), 2), # Solar potential (15% efficiency)
     }
     
     yearly_stats["overview"] = get_climate_description(yearly_stats)

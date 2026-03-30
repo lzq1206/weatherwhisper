@@ -18,6 +18,8 @@
     "avg_cloud": 6.2,
     "growing_season": 365,
     "best_time": "2-12月",
+    "water_temp": 24.7,
+    "solar_energy": 218.9,
     "overview": "热带/亚热带气候，全年气温较高。 降水极丰沛。"
   },
   "monthly": {

@@ -18,6 +18,8 @@
     "avg_cloud": 4.3,
     "growing_season": 353,
     "best_time": "3-10月",
+    "water_temp": 19.5,
+    "solar_energy": 184.12,
     "overview": "温带气候，四季分明。 湿润多雨。"
   },
   "monthly": {

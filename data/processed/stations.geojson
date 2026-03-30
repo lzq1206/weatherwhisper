@@ -22,6 +22,8 @@
         "avg_cloud": 7.1,
         "growing_season": 314,
         "best_time": "4-10月",
+        "water_temp": 18.5,
+        "solar_energy": 175.81,
         "overview": "温带气候，四季分明。 干旱/半干旱地区。"
       }
     },
@@ -46,6 +48,8 @@
         "avg_cloud": 6.3,
         "growing_season": 327,
         "best_time": "9-9月",
+        "water_temp": 19.1,
+        "solar_energy": 251.67,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -70,6 +74,8 @@
         "avg_cloud": 5.7,
         "growing_season": 325,
         "best_time": "10-10月",
+        "water_temp": 19.0,
+        "solar_energy": 221.03,
         "overview": "温带气候，四季分明。 降水极丰沛。"
       }
     },
@@ -94,6 +100,8 @@
         "avg_cloud": 5.7,
         "growing_season": 329,
         "best_time": "9-10月",
+        "water_temp": 19.0,
+        "solar_energy": 213.76,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -118,6 +126,8 @@
         "avg_cloud": 5.5,
         "growing_season": 337,
         "best_time": "9-10月",
+        "water_temp": 19.0,
+        "solar_energy": 217.28,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -142,6 +152,8 @@
         "avg_cloud": 5.9,
         "growing_season": 328,
         "best_time": "4-10月",
+        "water_temp": 18.8,
+        "solar_energy": 216.65,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -166,6 +178,8 @@
         "avg_cloud": 7.0,
         "growing_season": 289,
         "best_time": "4-10月",
+        "water_temp": 17.3,
+        "solar_energy": 183.38,
         "overview": "温带气候，四季分明。 干旱/半干旱地区。"
       }
     },
@@ -190,6 +204,8 @@
         "avg_cloud": 5.1,
         "growing_season": 283,
         "best_time": "4-10月",
+        "water_temp": 16.2,
+        "solar_energy": 234.39,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -214,6 +230,8 @@
         "avg_cloud": 7.1,
         "growing_season": 313,
         "best_time": "4-10月",
+        "water_temp": 17.7,
+        "solar_energy": 179.31,
         "overview": "温带气候，四季分明。 干旱/半干旱地区。"
       }
     },
@@ -238,6 +256,8 @@
         "avg_cloud": 6.0,
         "growing_season": 303,
         "best_time": "4-10月",
+        "water_temp": 17.5,
+        "solar_energy": 253.76,
         "overview": "温带气候，四季分明。 半湿润地区。"
       }
     },
@@ -262,6 +282,8 @@
         "avg_cloud": 4.9,
         "growing_season": 313,
         "best_time": "4-10月",
+        "water_temp": 17.9,
+        "solar_energy": 235.42,
         "overview": "温带气候，四季分明。 半湿润地区。"
       }
     },
@@ -286,6 +308,8 @@
         "avg_cloud": 5.0,
         "growing_season": 309,
         "best_time": "4-10月",
+        "water_temp": 17.9,
+        "solar_energy": 233.64,
         "overview": "温带气候，四季分明。 半湿润地区。"
       }
     },
@@ -310,6 +334,8 @@
         "avg_cloud": 4.6,
         "growing_season": 309,
         "best_time": "4-10月",
+        "water_temp": 18.3,
+        "solar_energy": 231.86,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -334,6 +360,8 @@
         "avg_cloud": 5.1,
         "growing_season": 295,
         "best_time": "4-10月",
+        "water_temp": 17.4,
+        "solar_energy": 229.51,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -358,6 +386,8 @@
         "avg_cloud": 6.5,
         "growing_season": 312,
         "best_time": "10-10月",
+        "water_temp": 17.0,
+        "solar_energy": 211.07,
         "overview": "温带气候，四季分明。 降水极丰沛。"
       }
     },
@@ -382,6 +412,8 @@
         "avg_cloud": 7.0,
         "growing_season": 293,
         "best_time": "4-10月",
+        "water_temp": 17.1,
+        "solar_energy": 174.93,
         "overview": "温带气候，四季分明。 干旱/半干旱地区。"
       }
     },
@@ -406,6 +438,8 @@
         "avg_cloud": 6.7,
         "growing_season": 313,
         "best_time": "6-10月",
+        "water_temp": 17.7,
+        "solar_energy": 250.53,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -430,6 +464,8 @@
         "avg_cloud": 5.9,
         "growing_season": 305,
         "best_time": "5-10月",
+        "water_temp": 17.7,
+        "solar_energy": 222.19,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -454,6 +490,8 @@
         "avg_cloud": 5.8,
         "growing_season": 308,
         "best_time": "4-10月",
+        "water_temp": 17.9,
+        "solar_energy": 217.36,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -478,6 +516,8 @@
         "avg_cloud": 5.5,
         "growing_season": 315,
         "best_time": "4-10月",
+        "water_temp": 18.2,
+        "solar_energy": 218.6,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -502,6 +542,8 @@
         "avg_cloud": 2.2,
         "growing_season": 253,
         "best_time": "4-9月",
+        "water_temp": 14.7,
+        "solar_energy": 237.65,
         "overview": "温带气候，四季分明。 半湿润地区。"
       }
     },
@@ -526,6 +568,8 @@
         "avg_cloud": 6.2,
         "growing_season": 365,
         "best_time": "2-12月",
+        "water_temp": 24.7,
+        "solar_energy": 218.9,
         "overview": "热带/亚热带气候，全年气温较高。 降水极丰沛。"
       }
     },
@@ -550,6 +594,8 @@
         "avg_cloud": 4.3,
         "growing_season": 353,
         "best_time": "3-10月",
+        "water_temp": 19.5,
+        "solar_energy": 184.12,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -574,6 +620,8 @@
         "avg_cloud": 5.7,
         "growing_season": 338,
         "best_time": "9-10月",
+        "water_temp": 19.3,
+        "solar_energy": 218.2,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     }

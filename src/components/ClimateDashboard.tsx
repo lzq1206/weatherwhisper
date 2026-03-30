@@ -138,7 +138,7 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, onClose 
     { icon: Waves, label: '水温 (估算)', value: `${data.yearly.water_temp}°C`, color: 'text-blue-500' },
     { icon: Calendar, label: '最佳访问', value: data.yearly.best_time, color: 'text-emerald-400' },
     { icon: Sprout, label: '生长季节', value: `${data.yearly.growing_season}天`, color: 'text-green-400' },
-    { icon: Zap, label: '太阳能潜力', value: `${data.yearly.solar_potential}kWh`, color: 'text-orange-400' }
+    { icon: Zap, label: '太阳能潜力', value: `${data.yearly.solar_energy}kWh`, color: 'text-orange-400' }
   ];
 
   return (

@@ -32,7 +32,9 @@ const METRICS = [
   { id: 'avg_cloud', label: '云彩', unit: '%' },
   { id: 'water_temp', label: '水温', unit: '°C' },
   { id: 'growing_season', label: '生长季节', unit: '天' },
-  { id: 'solar_energy', label: '太阳能', unit: 'kWh' }
+  { id: 'solar_energy', label: '太阳能', unit: 'kWh' },
+  { id: 'best_time', label: '最佳访问时间', unit: '' },
+  { id: 'overview', label: '气候概述', unit: '' },
 ];
 
 const ClimateMap: React.FC<ClimateMapProps> = ({ onStationSelect, selectedMonth }) => {
