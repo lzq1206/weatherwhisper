@@ -1,0 +1,425 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.05,
+          30.53333
+        ]
+      },
+      "properties": {
+        "id": "584240",
+        "city": "Anqing",
+        "province": "Anhui",
+        "elev": 19.8,
+        "avg_temp": 17.02,
+        "max_temp": 38.2,
+        "min_temp": -2.0,
+        "avg_wind": 3.2,
+        "total_precip": 0.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.9667,
+          30.6167
+        ]
+      },
+      "properties": {
+        "id": "584240",
+        "city": "Anqing",
+        "province": "AH",
+        "elev": 63.2,
+        "avg_temp": 17.55,
+        "max_temp": 37.6,
+        "min_temp": -3.0,
+        "avg_wind": 2.7,
+        "total_precip": 1373.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.9673,
+          30.6231
+        ]
+      },
+      "properties": {
+        "id": "584240",
+        "city": "Anqing",
+        "province": "AH",
+        "elev": 63.2,
+        "avg_temp": 17.54,
+        "max_temp": 37.2,
+        "min_temp": -3.0,
+        "avg_wind": 2.69,
+        "total_precip": 1538.5
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.9673,
+          30.6231
+        ]
+      },
+      "properties": {
+        "id": "584240",
+        "city": "Anqing",
+        "province": "AH",
+        "elev": 63.2,
+        "avg_temp": 17.49,
+        "max_temp": 38.2,
+        "min_temp": -3.0,
+        "avg_wind": 2.64,
+        "total_precip": 1289.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.9673,
+          30.6231
+        ]
+      },
+      "properties": {
+        "id": "584240",
+        "city": "Anqing",
+        "province": "AH",
+        "elev": 63.2,
+        "avg_temp": 17.45,
+        "max_temp": 37.2,
+        "min_temp": -6.7,
+        "avg_wind": 2.65,
+        "total_precip": 1283.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.9673,
+          30.6231
+        ]
+      },
+      "properties": {
+        "id": "584240",
+        "city": "Anqing",
+        "province": "AH",
+        "elev": 63.2,
+        "avg_temp": 17.35,
+        "max_temp": 36.7,
+        "min_temp": -6.0,
+        "avg_wind": 3.05,
+        "total_precip": 1434.7
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.3833,
+          32.95
+        ]
+      },
+      "properties": {
+        "id": "582210",
+        "city": "Bengbu",
+        "province": "Anhui",
+        "elev": 18.7,
+        "avg_temp": 15.77,
+        "max_temp": 36.9,
+        "min_temp": -8.1,
+        "avg_wind": 2.61,
+        "total_precip": 0.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.333,
+          34.417
+        ]
+      },
+      "properties": {
+        "id": "580150",
+        "city": "Dangshan",
+        "province": "AH",
+        "elev": 44.0,
+        "avg_temp": 14.67,
+        "max_temp": 36.5,
+        "min_temp": -10.6,
+        "avg_wind": 2.69,
+        "total_precip": 929.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.95,
+          31.06667
+        ]
+      },
+      "properties": {
+        "id": "583190",
+        "city": "Dongcheng",
+        "province": "Anhui",
+        "elev": 85.4,
+        "avg_temp": 16.21,
+        "max_temp": 36.9,
+        "min_temp": -4.3,
+        "avg_wind": 3.3,
+        "total_precip": 0.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.733,
+          32.867
+        ]
+      },
+      "properties": {
+        "id": "582030",
+        "city": "Fuyang.AP",
+        "province": "AH",
+        "elev": 33.0,
+        "avg_temp": 15.95,
+        "max_temp": 37.2,
+        "min_temp": -7.9,
+        "avg_wind": 2.51,
+        "total_precip": 766.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.7363,
+          32.8776
+        ]
+      },
+      "properties": {
+        "id": "582030",
+        "city": "Fuyang.AP",
+        "province": "AH",
+        "elev": 33.0,
+        "avg_temp": 16.38,
+        "max_temp": 38.4,
+        "min_temp": -11.6,
+        "avg_wind": 2.47,
+        "total_precip": 642.3
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.7363,
+          32.8776
+        ]
+      },
+      "properties": {
+        "id": "582030",
+        "city": "Fuyang.AP",
+        "province": "AH",
+        "elev": 33.0,
+        "avg_temp": 16.39,
+        "max_temp": 37.4,
+        "min_temp": -10.3,
+        "avg_wind": 2.5,
+        "total_precip": 692.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.7363,
+          32.8776
+        ]
+      },
+      "properties": {
+        "id": "582030",
+        "city": "Fuyang.AP",
+        "province": "AH",
+        "elev": 33.0,
+        "avg_temp": 16.77,
+        "max_temp": 37.4,
+        "min_temp": -9.5,
+        "avg_wind": 2.54,
+        "total_precip": 888.7
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.7363,
+          32.8776
+        ]
+      },
+      "properties": {
+        "id": "582030",
+        "city": "Fuyang.AP",
+        "province": "AH",
+        "elev": 33.0,
+        "avg_temp": 15.88,
+        "max_temp": 37.8,
+        "min_temp": -10.9,
+        "avg_wind": 2.62,
+        "total_precip": 971.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.1642,
+          30.1347
+        ]
+      },
+      "properties": {
+        "id": "584370",
+        "city": "Huang.Shan",
+        "province": "AH",
+        "elev": 1836.0,
+        "avg_temp": 15.54,
+        "max_temp": 35.5,
+        "min_temp": -15.0,
+        "avg_wind": 6.11,
+        "total_precip": 2040.7
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.3167,
+          31.4
+        ]
+      },
+      "properties": {
+        "id": "583140",
+        "city": "Huoshan",
+        "province": "Anhui",
+        "elev": 68.1,
+        "avg_temp": 15.55,
+        "max_temp": 37.6,
+        "min_temp": -5.94,
+        "avg_wind": 1.42,
+        "total_precip": 0.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.3333,
+          31.4
+        ]
+      },
+      "properties": {
+        "id": "583140",
+        "city": "Huoshan",
+        "province": "AH",
+        "elev": 70.0,
+        "avg_temp": 16.16,
+        "max_temp": 38.0,
+        "min_temp": -9.4,
+        "avg_wind": 1.51,
+        "total_precip": 1236.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.337,
+          31.4009
+        ]
+      },
+      "properties": {
+        "id": "583140",
+        "city": "Huoshan",
+        "province": "AH",
+        "elev": 70.0,
+        "avg_temp": 16.24,
+        "max_temp": 37.0,
+        "min_temp": -6.6,
+        "avg_wind": 1.5,
+        "total_precip": 1048.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.337,
+          31.4009
+        ]
+      },
+      "properties": {
+        "id": "583140",
+        "city": "Huoshan",
+        "province": "AH",
+        "elev": 70.0,
+        "avg_temp": 16.45,
+        "max_temp": 38.6,
+        "min_temp": -9.5,
+        "avg_wind": 1.56,
+        "total_precip": 1412.6
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.337,
+          31.4009
+        ]
+      },
+      "properties": {
+        "id": "583140",
+        "city": "Huoshan",
+        "province": "AH",
+        "elev": 70.0,
+        "avg_temp": 16.73,
+        "max_temp": 37.4,
+        "min_temp": -9.5,
+        "avg_wind": 1.55,
+        "total_precip": 1129.4
+      }
+    }
+  ]
+}
