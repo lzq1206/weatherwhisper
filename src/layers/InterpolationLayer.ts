@@ -1,4 +1,4 @@
-import { Layer, LayerProps, PickingInfo, project32, picking } from '@deck.gl/core';
+import { Layer, LayerProps, project32, picking } from '@deck.gl/core';
 import { Model, Geometry } from '@luma.gl/engine';
 
 // Custom IDW Interpolation Layer for Deck.gl v9
@@ -32,9 +32,22 @@ const defaultProps = {
   ]
 };
 
-export default class InterpolationLayer extends Layer<InterpolationLayerProps, InterpolationLayerState> {
+/**
+ * Custom IDW Interpolation Layer
+ * Note: Deck.gl v9 Layer class only takes one type argument <PropsT>
+ */
+export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
   static layerName = 'InterpolationLayer';
   static defaultProps = defaultProps;
+
+  // We cast this.state to InterpolationLayerState in methods
+  get state(): InterpolationLayerState {
+    return super.state as InterpolationLayerState;
+  }
+
+  set state(s: InterpolationLayerState) {
+    super.state = s;
+  }
 
   getShaders() {
     return {
@@ -57,7 +70,6 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps, I
 
         vec3 getColor(float v) {
           float norm = clamp((v + 10.0) / 50.0, 0.0, 1.0);
-          float stepValue = 1.25 / 5.0; // Normalized mapped to steps
           if (norm < 0.25) return mix(uColors[0], uColors[1], norm / 0.25);
           if (norm < 0.5) return mix(uColors[1], uColors[2], (norm - 0.25) / 0.25);
           if (norm < 0.75) return mix(uColors[2], uColors[3], (norm - 0.5) / 0.25);
