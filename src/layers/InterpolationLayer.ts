@@ -34,7 +34,7 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
   static defaultProps = defaultProps;
 
   // Use declare to avoid overwriting the base property in Deck.gl v9
-  declare state: InterpolationLayerState;
+  declare state: any;
 
   getShaders() {
     return {
@@ -92,7 +92,7 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
   }
 
   initializeState() {
-    const { device } = this.context as any;
+    const { device } = (this as any).context;
     this.setState({
       model: this._getModel(device),
       uPositions: [],
@@ -101,11 +101,11 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
     });
   }
 
-  updateState(params: UpdateParameters<this>) {
+  updateState(params: any) {
     const { props, changeFlags } = params;
     if (changeFlags.dataChanged || changeFlags.viewportChanged) {
       const { data, getPosition, getValue } = props;
-      const { viewport } = this.context as any;
+      const { viewport } = (this as any).context;
       if (!data || data.length === 0 || !viewport) return;
 
       const uPositions: number[] = [];
@@ -128,7 +128,7 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
 
   draw({ uniforms }: any) {
     const { model, uPositions, uValues, uCount } = this.state;
-    const { p, colorRange } = this.props;
+    const { p, colorRange } = (this as any).props;
 
     if (model && uCount > 0) {
       // In luma.gl v9, setProps is used on the model
@@ -153,13 +153,13 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
           vec3_uColors: colorRange!.flat()
         });
       }
-      model.draw(this.context.renderPass);
+      model.draw((this as any).context.renderPass);
     }
   }
 
   _getModel(device: any) {
     return new Model(device, {
-      id: `interpolation-model-${this.id}`,
+      id: `interpolation-model-${(this as any).id}`,
       ...this.getShaders(),
       bufferLayout: [
         { name: 'positions', format: 'float32x2' }
