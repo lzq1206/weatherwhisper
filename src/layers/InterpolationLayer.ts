@@ -32,22 +32,9 @@ const defaultProps = {
   ]
 };
 
-/**
- * Custom IDW Interpolation Layer
- * Note: Deck.gl v9 Layer class only takes one type argument <PropsT>
- */
 export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
   static layerName = 'InterpolationLayer';
   static defaultProps = defaultProps;
-
-  // We cast this.state to InterpolationLayerState in methods
-  get state(): InterpolationLayerState {
-    return super.state as InterpolationLayerState;
-  }
-
-  set state(s: InterpolationLayerState) {
-    super.state = s;
-  }
 
   getShaders() {
     return {
@@ -144,7 +131,8 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
   }
 
   draw({ uniforms }: any) {
-    const { model, uPositions, uValues, uCount } = this.state;
+    const state = this.state as InterpolationLayerState;
+    const { model, uPositions, uValues, uCount } = state;
     const { p, colorRange } = this.props;
     const { viewport } = this.context as any;
 
