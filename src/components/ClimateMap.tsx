@@ -3,6 +3,7 @@ import DeckGL from '@deck.gl/react';
 import { Map } from 'react-map-gl/maplibre';
 import { ScatterplotLayer, GeoJsonLayer } from '@deck.gl/layers';
 import InterpolationLayer from '../layers/InterpolationLayer';
+import maplibregl from 'maplibre-gl';
 
 import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -36,31 +37,26 @@ interface Props {
 
 const ClimateMap: React.FC<Props> = ({ selectedStation, setSelectedStation, currentMonth }) => {
   const [data, setData] = useState<StationFeature[]>([]);
-  const [metric, setMetric] = useState<'temp_avg' | 'wind_avg' | 'rh_avg'>('temp_avg');
+  const [metric, setMetric] = useState<'avg_temp' | 'avg_wind' | 'total_precip'>('avg_temp');
   const [hoverInfo, setHoverInfo] = useState<any>(null);
-  const [allStationDetails, setAllStationDetails] = useState<Record<string, any>>({});
 
   useEffect(() => {
     fetch('/data/stations.geojson')
       .then(res => res.json())
-      .then(json => setData(json.features));
+      .then(json => {
+        if (json && json.features) {
+          setData(json.features);
+        }
+      })
+      .catch(err => console.error("Failed to load stations data:", err));
   }, []);
 
-  // Pre-fetch/Load monthly data for interpolation when month changes
-  // In a real app, we'd have a single JSON with all monthly averages for interpolation
-  // For this demo, we'll assume the properties already contain annual or we fetch a month-grid
-  
   const layers = [
     new InterpolationLayer({
       id: 'idw-layer',
       data,
       getPosition: (d: any) => d.geometry.coordinates,
-      // Use monthly data if available, else fallback to yearly
-      getValue: (d: any) => {
-        // We simulate dynamic monthly data access here
-        // Ideally Phase 1 would've generated a 'monthly_averages.json' for the map
-        return d.properties[metric] || 15.0; 
-      },
+      getValue: (d: any) => d.properties[metric] || 0,
       p: 2.5,
       opacity: 0.5
     }),
@@ -90,7 +86,7 @@ const ClimateMap: React.FC<Props> = ({ selectedStation, setSelectedStation, curr
         layers={layers}
         getCursor={() => (hoverInfo ? 'pointer' : 'grab')}
       >
-        <Map mapLib={import('maplibre-gl')} mapStyle={MAP_STYLE} />
+        <Map mapLib={maplibregl} mapStyle={MAP_STYLE} />
       </DeckGL>
 
       {/* Layer Switcher Controls */}
