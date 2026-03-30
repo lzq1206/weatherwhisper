@@ -36,6 +36,11 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
   static layerName = 'InterpolationLayer';
   static defaultProps = defaultProps;
 
+  // Special handling for state in Deck.gl v9 / TS
+  get typedState() {
+    return this.state as unknown as InterpolationLayerState;
+  }
+
   getShaders() {
     return {
       vs: `
@@ -51,20 +56,20 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
         varying vec2 vTexCoord;
         uniform vec2 uPositions[100];
         uniform float uValues[100];
-        uniform int uCount;
-        uniform float uP;
-        uniform vec3 uColors[5];
+        uniform int int_uCount;
+        uniform float float_uP;
+        uniform vec3 vec3_uColors[5];
 
         vec3 getColor(float v) {
           float norm = clamp((v + 10.0) / 50.0, 0.0, 1.0);
-          if (norm < 0.25) return mix(uColors[0], uColors[1], norm / 0.25);
-          if (norm < 0.5) return mix(uColors[1], uColors[2], (norm - 0.25) / 0.25);
-          if (norm < 0.75) return mix(uColors[2], uColors[3], (norm - 0.5) / 0.25);
-          return mix(uColors[3], uColors[4], (norm - 0.75) / 0.25);
+          if (norm < 0.25) return mix(vec3_uColors[0], vec3_uColors[1], norm / 0.25);
+          if (norm < 0.5) return mix(vec3_uColors[1], vec3_uColors[2], (norm - 0.25) / 0.25);
+          if (norm < 0.75) return mix(vec3_uColors[2], vec3_uColors[3], (norm - 0.5) / 0.25);
+          return mix(vec3_uColors[3], vec3_uColors[4], (norm - 0.75) / 0.25);
         }
 
         void main() {
-          if (uCount == 0) {
+          if (int_uCount == 0) {
             discard;
           }
           
@@ -73,7 +78,7 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
           bool exact = false;
 
           for (int i = 0; i < 100; i++) {
-            if (i >= uCount) break;
+            if (i >= int_uCount) break;
             
             float d = distance(vTexCoord, uPositions[i]);
             if (d < 0.005) {
@@ -81,7 +86,7 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
               exact = true;
               break;
             }
-            float w = 1.0 / pow(max(d, 0.0001), uP);
+            float w = 1.0 / pow(max(d, 0.0001), float_uP);
             sumWeights += w;
             sumValues += w * uValues[i];
           }
@@ -131,8 +136,7 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
   }
 
   draw({ uniforms }: any) {
-    const state = this.state as InterpolationLayerState;
-    const { model, uPositions, uValues, uCount } = state;
+    const { model, uPositions, uValues, uCount } = this.typedState;
     const { p, colorRange } = this.props;
     const { viewport } = this.context as any;
 
@@ -141,9 +145,9 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
         ...uniforms,
         uPositions,
         uValues,
-        uCount,
-        uP: p,
-        uColors: colorRange!.flat().map((c: number) => c),
+        int_uCount: uCount,
+        float_uP: p,
+        vec3_uColors: colorRange!.flat().map((c: number) => c),
         uViewport: [0, 0, viewport.width, viewport.height]
       });
       model.draw(this.context.renderPass);
