@@ -51,7 +51,7 @@ const ClimateMap: React.FC<Props> = ({ selectedStation, setSelectedStation, curr
       .catch(err => console.error("Failed to load stations data:", err));
   }, []);
 
-  const layers = [
+  const layers: any[] = [
     new InterpolationLayer({
       id: 'idw-layer',
       data,
@@ -71,10 +71,10 @@ const ClimateMap: React.FC<Props> = ({ selectedStation, setSelectedStation, curr
       getFillColor: (d: any) => d.properties.id === selectedStation ? [255, 255, 0] : [255, 255, 255],
       getLineColor: [0, 0, 0],
       stroked: true,
-      onClick: info => {
+      onClick: (info: any) => {
         if (info.object) setSelectedStation(info.object.properties.id);
       },
-      onHover: info => setHoverInfo(info)
+      onHover: (info: any) => setHoverInfo(info)
     })
   ];
 
