@@ -33,8 +33,8 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
   static layerName = 'InterpolationLayer';
   static defaultProps = defaultProps;
 
-  // Explicitly declare state with the correct type for Deck.gl v9
-  state!: InterpolationLayerState;
+  // Use declare to avoid overwriting the base property in Deck.gl v9
+  declare state: InterpolationLayerState;
 
   getShaders() {
     return {
@@ -101,7 +101,7 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
     });
   }
 
-  updateState(params: UpdateParameters<InterpolationLayer>) {
+  updateState(params: UpdateParameters<this>) {
     const { props, changeFlags } = params;
     if (changeFlags.dataChanged || changeFlags.viewportChanged) {
       const { data, getPosition, getValue } = props;
