@@ -20,24 +20,41 @@ def parse_epw_location(first_line):
         "elev": float(parts[9])
     }
 
-def calculate_wind_rose(df):
-    try:
-        # Wind Rose: 16 directions (22.5 degrees each)
-        # N: 348.75 - 11.25
-        bins = [0, 11.25, 33.75, 56.25, 78.75, 101.25, 123.75, 146.25, 168.75, 191.25, 213.75, 236.25, 258.75, 281.25, 303.75, 326.25, 348.75, 361]
-        labels = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW", "N_"]
-        
-        df['dir_bin'] = pd.cut(df['WindDir'], bins=bins, labels=labels, include_lowest=True)
-        df.loc[df['dir_bin'] == "N_", 'dir_bin'] = "N"
-        
-        speed_bins = [0, 2, 5, 10, 15, 100]
-        speed_labels = ["0-2", "2-5", "5-10", "10-15", "15+"]
-        df['speed_bin'] = pd.cut(df['WindSpeed'], bins=speed_bins, labels=speed_labels)
-        
-        rose = df.groupby(['dir_bin', 'speed_bin']).size().unstack(fill_value=0)
-        return rose.to_dict()
-    except:
-        return {}
+def calculate_growing_season(df):
+    # Standard: consecutive days with T_min > 0
+    # For TMY/EPW, we can just count days in each month with T_min > 0
+    # Or simpler: months where avg_temp > 5C (common bio-climatic threshold)
+    pass
+
+def get_climate_description(stats):
+    # stats is the yearly dict
+    t = stats['avg_temp']
+    p = stats['total_precip']
+    
+    desc = ""
+    if t > 20: desc += "热带/亚热带气候，全年气温较高。"
+    elif t > 10: desc += "温带气候，四季分明。"
+    else: desc += "寒冷气候，冬季漫长。"
+    
+    if p > 1500: desc += " 降水极丰沛。"
+    elif p > 800: desc += " 湿润多雨。"
+    elif p > 400: desc += " 半湿润地区。"
+    else: desc += " 干旱/半干旱地区。"
+    
+    return desc
+
+def get_best_time(monthly_json):
+    best_months = []
+    for m, s in monthly_json.items():
+        # Comfort: 18-26C, Precip < 100mm
+        if 15 <= s['temp_avg'] <= 28 and s['precip'] < 100:
+            best_months.append(m)
+    
+    if not best_months: return "四季皆宜"
+    
+    # Range processing
+    if len(best_months) == 12: return "全年"
+    return f"{min(best_months)}-{max(best_months)}月"
 
 def process_station(epw_path):
     print(f"Processing {epw_path}...")
@@ -47,62 +64,68 @@ def process_station(epw_path):
     metadata = parse_epw_location(lines[0])
     station_id = metadata['wmo']
     
-    # Standard EPW Data Columns (1-indexed for reference, so parts[6] is column 7)
-    # 7: DBT, 9: RH, 21: Wind Dir, 22: Wind Speed, 34: Precip Depth
+    # EPW Columns:
+    # 6: DBT (7th col), 8: RH (9th col), 13: GHR (14th col), 21: WindSpeed (22nd col), 22: TotalCloud (23rd col), 33: LiquidPrecip (34th col)
     
     data = []
     for line in lines:
         if re.match(r'^\d{4},', line):
             parts = line.strip().split(',')
-            if len(parts) >= 22:
+            if len(parts) >= 34:
                 try:
-                    # Indexing: 0=Year, 1=Month, 6=DBT, 8=RH, 20=WindDir, 21=WindSpeed
-                    # Precip is usually at index 33 or 34 but can be missing
-                    precip = 0.0
-                    if len(parts) > 33:
-                        try: precip = float(parts[33]) if parts[33] != '999' else 0.0
-                        except: pass
-                        
                     data.append({
                         'Month': int(parts[1]),
-                        'DBT': float(parts[6]),
-                        'RH': float(parts[8]),
-                        'WindDir': float(parts[20]),
+                        'Day': int(parts[2]),
+                        'Temp': float(parts[6]),
+                        'Humidity': float(parts[8]),
+                        'Solar': float(parts[13]),
                         'WindSpeed': float(parts[21]),
-                        'Precip': precip
+                        'Cloud': float(parts[22]),
+                        'Precip': float(parts[33]) if parts[33] != '999' else 0.0
                     })
                 except Exception:
                     continue
             
     df = pd.DataFrame(data)
     if df.empty:
-        print(f"  No valid data for {station_id}")
         return None
 
+    # Monthly aggregation
     monthly_stats = df.groupby('Month').agg({
-        'DBT': ['mean', 'max', 'min'],
-        'RH': 'mean',
+        'Temp': ['mean', 'max', 'min'],
+        'Humidity': 'mean',
         'WindSpeed': 'mean',
-        'Precip': 'sum'
+        'Precip': 'sum',
+        'Solar': 'sum',
+        'Cloud': 'mean'
     })
-    monthly_stats.columns = ['temp_avg', 'temp_max', 'temp_min', 'rh_avg', 'wind_avg', 'precip_sum']
+    
+    monthly_stats.columns = ['temp_avg', 'temp_max', 'temp_min', 'humidity', 'wind', 'precip', 'solar', 'cloud']
     monthly_json = monthly_stats.to_dict(orient='index')
     
+    # Growing season: Days with T_avg > 5C (approximation)
+    growing_days = 0
+    # Group by Day,Month to get daily averages? EPW is already TMY, so we have 365 days
+    daily = df.groupby(['Month', 'Day'])['Temp'].mean().reset_index()
+    growing_days = len(daily[daily['Temp'] > 5])
+
     yearly_stats = {
-        "avg_temp": round(float(df['DBT'].mean()), 2),
-        "max_temp": float(df['DBT'].max()),
-        "min_temp": float(df['DBT'].min()),
+        "avg_temp": round(float(df['Temp'].mean()), 2),
+        "total_precip": round(float(df['Precip'].sum()), 2),
+        "avg_humidity": round(float(df['Humidity'].mean()), 2),
         "avg_wind": round(float(df['WindSpeed'].mean()), 2),
-        "total_precip": round(float(df['Precip'].sum()), 2)
+        "total_solar": round(float(df['Solar'].sum() / 1000), 2), # kWh/m2
+        "avg_cloud": round(float(df['Cloud'].mean()), 1),
+        "growing_season": growing_days,
+        "best_time": get_best_time(monthly_json)
     }
     
-    wind_rose = calculate_wind_rose(df)
+    yearly_stats["overview"] = get_climate_description(yearly_stats)
     
     station_data = {
         "metadata": metadata,
         "yearly": yearly_stats,
-        "monthly": monthly_json,
-        "wind_rose": wind_rose
+        "monthly": monthly_json
     }
     
     with open(os.path.join(PROCESSED_DIR, f"{station_id}.json"), 'w', encoding='utf-8') as f:
@@ -118,7 +141,6 @@ def process_station(epw_path):
             "id": station_id,
             "city": metadata['city'],
             "province": metadata['state'],
-            "elev": metadata['elev'],
             **yearly_stats
         }
     }

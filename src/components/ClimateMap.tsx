@@ -1,66 +1,63 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import DeckGL from '@deck.gl/react';
+import { ScatterplotLayer } from '@deck.gl/layers';
 import { Map } from 'react-map-gl/maplibre';
-import { ScatterplotLayer, GeoJsonLayer } from '@deck.gl/layers';
 import InterpolationLayer from '../layers/InterpolationLayer';
-import maplibregl from 'maplibre-gl';
-
-import 'maplibre-gl/dist/maplibre-gl.css';
-
-const INITIAL_VIEW_STATE = {
-  longitude: 105.0,
-  latitude: 35.0,
-  zoom: 3.5,
-  pitch: 0,
-  bearing: 0
-};
-
-const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+import { useTheme } from '../context/ThemeContext';
 
 interface StationFeature {
-  type: string;
-  geometry: { coordinates: [number, number] };
+  type: 'Feature';
+  geometry: {
+    type: 'Point';
+    coordinates: [number, number];
+  };
   properties: {
     id: string;
     city: string;
-    avg_temp: number;
-    avg_wind: number;
-    total_precip: number;
+    [key: string]: any;
   };
 }
 
-interface Props {
-  selectedStation: string | null;
-  setSelectedStation: (id: string | null) => void;
-  currentMonth: number;
+interface ClimateMapProps {
+  onStationSelect: (stationId: string) => void;
+  selectedMonth: number;
 }
 
-const ClimateMap: React.FC<Props> = ({ selectedStation, setSelectedStation, currentMonth }) => {
+const METRICS = [
+  { id: 'avg_temp', label: '温度', unit: '°C' },
+  { id: 'total_precip', label: '降水', unit: 'mm' },
+  { id: 'avg_humidity', label: '湿度', unit: '%' },
+  { id: 'avg_wind', label: '刮风', unit: 'm/s' },
+  { id: 'total_solar', label: '太阳', unit: 'kWh/m²' },
+  { id: 'avg_cloud', label: '云彩', unit: '%' },
+  { id: 'water_temp', label: '水温', unit: '°C' },
+  { id: 'growing_season', label: '生长季节', unit: '天' },
+  { id: 'solar_energy', label: '太阳能', unit: 'kWh' }
+];
+
+const ClimateMap: React.FC<ClimateMapProps> = ({ onStationSelect, selectedMonth }) => {
   const [data, setData] = useState<StationFeature[]>([]);
-  const [metric, setMetric] = useState<'avg_temp' | 'avg_wind' | 'total_precip'>('avg_temp');
-  const [hoverInfo, setHoverInfo] = useState<any>(null);
+  const [metric, setMetric] = useState('avg_temp');
+  const { theme } = useTheme();
 
   useEffect(() => {
-    fetch('/data/stations.geojson')
+    const baseUrl = window.location.hostname === 'localhost' ? '' : '/weatherwhisper';
+    fetch(`${baseUrl}/data/stations.geojson`)
       .then(res => res.json())
-      .then(json => {
-        if (json && json.features) {
-          setData(json.features);
-        }
-      })
-      .catch(err => console.error("Failed to load stations data:", err));
+      .then(json => setData(json.features))
+      .catch(err => console.error('Failed to load stations:', err));
   }, []);
 
-  const layers: any[] = [
+  const layers = useMemo(() => [
     new InterpolationLayer({
       id: 'idw-layer',
       data,
       getPosition: (d: any) => d.geometry.coordinates,
       getValue: (d: any) => d.properties[metric] || 0,
       p: 2.5,
-      opacity: 0.5
+      opacity: 0.5,
+      pickable: false
     }),
-
     new ScatterplotLayer({
       id: 'stations-layer',
       data,
@@ -68,65 +65,84 @@ const ClimateMap: React.FC<Props> = ({ selectedStation, setSelectedStation, curr
       radiusScale: 6,
       radiusMinPixels: 4,
       getPosition: (d: any) => d.geometry.coordinates,
-      getFillColor: (d: any) => d.properties.id === selectedStation ? [255, 255, 0] : [255, 255, 255],
+      getFillColor: [255, 255, 255, 200],
       getLineColor: [0, 0, 0],
-      stroked: true,
+      lineWidthMinPixels: 1,
       onClick: (info: any) => {
-        if (info.object) setSelectedStation(info.object.properties.id);
-      },
-      onHover: (info: any) => setHoverInfo(info)
+        if (info.object) {
+          onStationSelect(info.object.properties.id);
+        }
+      }
     })
-  ];
+  ], [data, metric, onStationSelect]);
+
+  const viewState = {
+    longitude: 105,
+    latitude: 35,
+    zoom: 3.5,
+    pitch: 0,
+    bearing: 0
+  };
 
   return (
-    <div className="relative w-screen h-screen">
-      <DeckGL
-        initialViewState={INITIAL_VIEW_STATE}
-        controller={true}
-        layers={layers}
-        getCursor={() => (hoverInfo ? 'pointer' : 'grab')}
-      >
-        <Map mapLib={maplibregl} mapStyle={MAP_STYLE} />
-      </DeckGL>
-
-      {/* Layer Switcher Controls */}
-      <div className="absolute top-4 right-4 z-10 bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20 text-white shadow-2xl">
-        <h3 className="text-sm font-bold mb-3 uppercase tracking-wider text-blue-400">WeatherWhisper Map</h3>
-        <div className="flex flex-col gap-2">
-          {([
-            { id: 'avg_temp', label: 'Temperature', emoji: '🌡️' },
-            { id: 'avg_wind', label: 'Wind Speed', emoji: '💨' },
-            { id: 'total_precip', label: 'Precipitation', emoji: '💧' }
-          ] as const).map(m => (
-            <button
-              key={m.id}
-              onClick={() => setMetric(m.id)}
-              className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-all ${
-                metric === m.id ? 'bg-blue-600/60 shadow-lg scale-105' : 'hover:bg-white/10'
-              }`}
-            >
-              <span className="text-lg">{m.emoji}</span>
-              <span className="text-sm font-medium">{m.label}</span>
-            </button>
-          ))}
+    <div className="relative w-full h-[600px] rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+      <div className="absolute top-4 right-4 z-20 flex flex-col gap-2">
+        <div className="bg-black/80 backdrop-blur-xl p-4 rounded-2xl border border-white/20 shadow-2xl max-w-[280px]">
+          <label className="text-white/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-3 block">
+            CLIMATE METRICS / 气候指标
+          </label>
+          <div className="grid grid-cols-2 gap-2">
+            {METRICS.map(m => (
+              <button
+                key={m.id}
+                onClick={() => setMetric(m.id)}
+                className={`px-3 py-2 rounded-xl text-xs font-medium transition-all duration-300 border ${
+                  metric === m.id 
+                    ? 'bg-blue-600/90 text-white border-blue-400/50 shadow-[0_0_15px_rgba(59,130,246,0.5)] scale-[1.02]' 
+                    : 'bg-white/5 text-white/70 border-white/10 hover:bg-white/10 hover:border-white/20'
+                }`}
+              >
+                <div className="flex flex-col items-start gap-0.5">
+                  <span>{m.label}</span>
+                  <span className="text-[9px] opacity-50 font-normal">{m.unit}</span>
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Tooltip */}
-      {hoverInfo && hoverInfo.object && (
-        <div
-          className="absolute z-20 pointer-events-none bg-black/80 backdrop-blur-md text-white p-3 rounded-lg border border-white/20 shadow-xl"
-          style={{ left: hoverInfo.x + 15, top: hoverInfo.y + 15 }}
-        >
-          <div className="text-xs text-blue-400 font-bold mb-1">{hoverInfo.object.properties.id}</div>
-          <div className="text-sm font-semibold">{hoverInfo.object.properties.city}</div>
-          <hr className="my-2 border-white/10" />
-          <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-            <span className="text-gray-400">Value:</span>
-            <span className="text-white font-mono">{hoverInfo.object.properties[metric]}</span>
-          </div>
-        </div>
-      )}
+      <DeckGL
+        initialViewState={viewState}
+        controller={true}
+        layers={layers}
+        getTooltip={({ object }: any) => {
+          if (!object) return null;
+          const m = METRICS.find(item => item.id === metric);
+          return {
+            html: `
+              <div style="background: rgba(0,0,0,0.8); color: white; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); font-family: sans-serif;">
+                <div style="font-weight: bold; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px;">${object.properties.city}</div>
+                <div style="display: flex; justify-content: space-between; gap: 20px; align-items: center;">
+                  <span style="opacity: 0.7; font-size: 11px;">${m?.label}</span>
+                  <span style="font-weight: 500; color: #60a5fa;">${object.properties[metric]}${m?.unit}</span>
+                </div>
+              </div>
+            `,
+            style: {
+              backgroundColor: 'transparent',
+              padding: '0px'
+            }
+          };
+        }}
+      >
+        <Map
+          mapStyle={theme === 'dark' 
+            ? 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'
+            : 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'
+          }
+        />
+      </DeckGL>
     </div>
   );
 };

@@ -1,34 +1,32 @@
-import { Layer, LayerProps, project32, picking } from '@deck.gl/core';
+import { Layer, LayerProps, project32, picking, UpdateParameters, DefaultProps } from '@deck.gl/core';
 import { Model, Geometry } from '@luma.gl/engine';
 
-// Custom IDW Interpolation Layer for Deck.gl v9
-// Uses a full-screen quad and Inverse Distance Weighting in the Fragment Shader
+/**
+ * Custom IDW Interpolation Layer for Deck.gl v9
+ * Renders a full-screen quad and performs IDW interpolation in the fragment shader
+ */
 
 export interface InterpolationLayerProps extends LayerProps {
   data: any[];
   getPosition?: (d: any) => [number, number];
   getValue?: (d: any) => number;
-  p?: number; // Power parameter for IDW
-  colorRange?: [number, number, number][]; // Array of RGB colors
+  p?: number;
+  colorRange?: [number, number, number][];
 }
 
 interface InterpolationLayerState {
-  model?: any;
+  model?: Model;
   uPositions: number[];
   uValues: number[];
   uCount: number;
 }
 
-const defaultProps = {
+const defaultProps: DefaultProps<InterpolationLayerProps> = {
   p: 2.0,
   getPosition: { type: 'accessor', value: (d: any) => d.geometry.coordinates },
   getValue: { type: 'accessor', value: (d: any) => d.properties.avg_temp },
   colorRange: [
-    [0, 0, 255],     // Cold
-    [0, 255, 255],   // Cool
-    [0, 255, 0],     // Moderate
-    [255, 255, 0],   // Warm
-    [255, 0, 0]      // Hot
+    [0, 0, 255], [0, 255, 255], [0, 255, 0], [255, 255, 0], [255, 0, 0]
   ]
 };
 
@@ -36,29 +34,31 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
   static layerName = 'InterpolationLayer';
   static defaultProps = defaultProps;
 
-  // Special handling for state in Deck.gl v9 / TS
-  get typedState() {
-    return this.state as unknown as InterpolationLayerState;
+  state!: InterpolationLayerState;
+
+  constructor(props: InterpolationLayerProps) {
+    super(props);
   }
 
   getShaders() {
     return {
-      vs: `
-        attribute vec2 positions;
-        varying vec2 vTexCoord;
+      vs: `#version 300 es
+        in vec2 positions;
+        out vec2 vTexCoord;
         void main() {
           vTexCoord = positions * 0.5 + 0.5;
           gl_Position = vec4(positions, 0.0, 1.0);
         }
       `,
-      fs: `
+      fs: `#version 300 es
         precision highp float;
-        varying vec2 vTexCoord;
+        in vec2 vTexCoord;
         uniform vec2 uPositions[100];
         uniform float uValues[100];
         uniform int int_uCount;
         uniform float float_uP;
         uniform vec3 vec3_uColors[5];
+        out vec4 fragColor;
 
         vec3 getColor(float v) {
           float norm = clamp((v + 10.0) / 50.0, 0.0, 1.0);
@@ -69,20 +69,15 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
         }
 
         void main() {
-          if (int_uCount == 0) {
-            discard;
-          }
-          
+          if (int_uCount == 0) discard;
           float sumWeights = 0.0;
           float sumValues = 0.0;
           bool exact = false;
-
           for (int i = 0; i < 100; i++) {
             if (i >= int_uCount) break;
-            
             float d = distance(vTexCoord, uPositions[i]);
             if (d < 0.005) {
-              gl_FragColor = vec4(getColor(uValues[i]) / 255.0, 0.7);
+              fragColor = vec4(getColor(uValues[i]) / 255.0, 0.7);
               exact = true;
               break;
             }
@@ -90,10 +85,9 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
             sumWeights += w;
             sumValues += w * uValues[i];
           }
-
           if (!exact) {
             float val = sumValues / max(sumWeights, 0.0001);
-            gl_FragColor = vec4(getColor(val) / 255.0, 0.6);
+            fragColor = vec4(getColor(val) / 255.0, 0.6);
           }
         }
       `,
@@ -102,43 +96,43 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
   }
 
   initializeState() {
-    const { device } = this.context as any;
-    const model = this._getModel(device);
-    this.setState({ 
-      model,
+    const { device } = this.context;
+    this.setState({
+      model: this._getModel(device),
       uPositions: [],
       uValues: [],
       uCount: 0
     });
   }
 
-  updateState({ props, changeFlags }: any) {
+  updateState({ props, changeFlags }: UpdateParameters<this>) {
     if (changeFlags.dataChanged || changeFlags.viewportChanged) {
       const { data, getPosition, getValue } = props;
-      const { viewport } = this.context as any;
-      
+      const { viewport } = this.context;
       if (!data || data.length === 0 || !viewport) return;
 
-      const uPositions = data.map((d: any) => {
-        const [lng, lat] = getPosition(d);
-        const [x, y] = viewport.project([lng, lat]);
-        return [x / viewport.width, 1.0 - (y / viewport.height)];
-      }).slice(0, 100);
-
-      const uValues = data.map((d: any) => getValue(d)).slice(0, 100);
+      const uPositions: number[] = [];
+      const uValues: number[] = [];
       
-      this.setState({ 
-        uPositions: uPositions.flat(), 
-        uValues, 
-        uCount: uPositions.length 
+      data.slice(0, 100).forEach((d: any) => {
+        const [lng, lat] = getPosition!(d);
+        const [x, y] = viewport.project([lng, lat]);
+        uPositions.push(x / viewport.width, 1.0 - (y / viewport.height));
+        uValues.push(getValue!(d));
+      });
+
+      this.setState({
+        uPositions,
+        uValues,
+        uCount: uValues.length
       });
     }
   }
 
   draw({ uniforms }: any) {
-    const { model, uPositions, uValues, uCount } = this.typedState;
+    const { model, uPositions, uValues, uCount } = this.state;
     const { p, colorRange } = this.props;
-    const { viewport } = this.context as any;
+    const { viewport } = this.context;
 
     if (model && uCount > 0) {
       model.setUniforms({
@@ -146,8 +140,8 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
         uPositions,
         uValues,
         int_uCount: uCount,
-        float_uP: p,
-        vec3_uColors: colorRange!.flat().map((c: number) => c),
+        float_uP: p!,
+        vec3_uColors: colorRange!.flat(),
         uViewport: [0, 0, viewport.width, viewport.height]
       });
       model.draw(this.context.renderPass);
@@ -158,6 +152,9 @@ export default class InterpolationLayer extends Layer<InterpolationLayerProps> {
     return new Model(device, {
       id: `interpolation-model-${this.id}`,
       ...this.getShaders(),
+      bufferLayout: [
+        { name: 'positions', format: 'float32x2' }
+      ],
       geometry: new Geometry({
         topology: 'triangle-strip',
         attributes: {
