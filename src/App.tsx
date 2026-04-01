@@ -19,6 +19,7 @@ type StationFeature = {
     avg_wind?: number;
     total_solar?: number;
     avg_cloud?: number;
+    tourism_score_avg?: number;
     water_temp?: number;
     growing_season?: number;
     solar_energy?: number;
@@ -113,8 +114,8 @@ function App() {
     return [
       { icon: ThermometerSun, label: '平均气温', value: selectedStation.avg_temp != null ? `${Number(selectedStation.avg_temp).toFixed(1)}°C` : '—' },
       { icon: CloudSun, label: '年降水', value: selectedStation.total_precip != null ? `${Number(selectedStation.total_precip).toFixed(0)} mm` : '—' },
-      { icon: MapPin, label: '地理位置', value: selectedStation.province || '中国' },
-      { icon: Sparkles, label: '最佳时段', value: selectedStation.best_time || '—' },
+      { icon: CloudSun, label: '平均云量', value: selectedStation.avg_cloud != null ? `${Number(selectedStation.avg_cloud).toFixed(1)}%` : '—' },
+      { icon: Sparkles, label: '旅游平均分', value: selectedStation.tourism_score_avg != null ? `${Number(selectedStation.tourism_score_avg).toFixed(1)} / 10` : '—' },
     ];
   }, [selectedStation]);
 

@@ -26,6 +26,9 @@ interface StationData {
     water_temp: number;
     growing_season: number;
     best_time: string;
+    best_tourism_months?: string;
+    tourism_score_avg?: number;
+    tourism_peak_month?: number | null;
     overview: string;
     solar_energy: number;
   };
@@ -38,6 +41,9 @@ interface StationData {
     precip: number;
     solar: number;
     cloud: number;
+    sunny_rate?: number;
+    tourism_score?: number;
+    comfort_label?: string;
   }>;
 }
 
@@ -50,10 +56,28 @@ interface ClimateDashboardProps {
 const BASE_PATH = import.meta.env.BASE_URL;
 const MONTHS = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
 
+function computeTourismScore(item: { temp_avg: number; humidity: number; cloud: number }) {
+  const temp = Number(item.temp_avg);
+  const humidity = Number(item.humidity);
+  const cloud = Number(item.cloud);
+  const sunnyRate = Math.max(0, Math.min(100, 100 - cloud));
+  const tempScore = Math.max(0, 1 - Math.abs(temp - 23) / 13);
+  const humidityScore = Math.max(0, 1 - Math.abs(humidity - 55) / 45);
+  const sunnyScore = sunnyRate / 100;
+  const score = Math.round((0.45 * tempScore + 0.25 * humidityScore + 0.30 * sunnyScore) * 10 * 10) / 10;
+  const comfortLabel = temp >= 18 && temp <= 28 && humidity >= 35 && humidity <= 75 && sunnyRate >= 35
+    ? '舒适'
+    : temp >= 15 && temp <= 30 && humidity >= 30 && humidity <= 80
+      ? '可接受'
+      : '偏不舒适';
+  return { sunnyRate: Math.round(sunnyRate * 10) / 10, score, comfortLabel };
+}
+
 const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selectedMonth, onClose }) => {
   const [data, setData] = useState<StationData | null>(null);
   const tempChartRef = useRef<HTMLDivElement>(null);
   const climateChartRef = useRef<HTMLDivElement>(null);
+  const tourismChartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!stationId) return;
@@ -68,7 +92,16 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
       data
         ? Object.entries(data.monthly)
             .sort(([a], [b]) => Number(a) - Number(b))
-            .map(([, value], idx) => ({ month: idx + 1, ...value }))
+            .map(([, value], idx) => {
+              const computed = computeTourismScore(value as any);
+              return {
+                month: idx + 1,
+                sunny_rate: value.sunny_rate ?? computed.sunnyRate,
+                tourism_score: value.tourism_score ?? computed.score,
+                comfort_label: value.comfort_label ?? computed.comfortLabel,
+                ...value,
+              };
+            })
         : [],
     [data]
   );
@@ -80,6 +113,12 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
   const wettest = monthlySorted.reduce((best, item, idx) => (item.precip > monthlySorted[best].precip ? idx : best), 0);
   const driest = monthlySorted.reduce((best, item, idx) => (item.precip < monthlySorted[best].precip ? idx : best), 0);
   const humidMonths = monthlySorted.filter(item => item.humidity >= 75).length;
+  const cloudiest = monthlySorted.reduce((best, item, idx) => (item.cloud > monthlySorted[best].cloud ? idx : best), 0);
+  const clearest = monthlySorted.reduce((best, item, idx) => (item.cloud < monthlySorted[best].cloud ? idx : best), 0);
+  const bestTourismMonth = monthlySorted.reduce((best, item, idx) => (item.tourism_score > monthlySorted[best].tourism_score ? idx : best), 0);
+  const bestTourismScore = monthlySorted[bestTourismMonth]?.tourism_score ?? computeTourismScore(monthlySorted[bestTourismMonth] || { temp_avg: 0, humidity: 0, cloud: 100 }).score;
+  const tourismAvg = monthlySorted.length ? monthlySorted.reduce((sum, item) => sum + item.tourism_score, 0) / monthlySorted.length : 0;
+  const bestTourismMonths = data?.yearly.best_tourism_months || `${MONTHS[bestTourismMonth]}`;
 
   useEffect(() => {
     if (!data || !tempChartRef.current || monthlySorted.length !== 12) return;
@@ -179,7 +218,7 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
         textStyle: { color: '#fff' },
       },
       legend: {
-        data: ['降水量', '湿度', '风速'],
+        data: ['降水量', '湿度', '云量', '晴天率'],
         textStyle: { color: '#cbd5e1' },
         top: 4,
       },
@@ -200,7 +239,7 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
         },
         {
           type: 'value',
-          name: '湿度 / 风速',
+          name: '湿度 / 云量 / 晴天率',
           nameTextStyle: { color: '#94a3b8' },
           splitLine: { show: false },
           axisLabel: { color: '#94a3b8' },
@@ -231,14 +270,24 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
           itemStyle: { color: '#22c55e' },
         },
         {
-          name: '风速',
+          name: '云量',
           type: 'line',
           yAxisIndex: 1,
           smooth: true,
-          data: monthlySorted.map(item => item.wind),
+          data: monthlySorted.map(item => item.cloud),
           symbolSize: 6,
-          lineStyle: { width: 2.5, color: '#a78bfa' },
-          itemStyle: { color: '#a78bfa' },
+          lineStyle: { width: 2.5, color: '#f59e0b' },
+          itemStyle: { color: '#f59e0b' },
+        },
+        {
+          name: '晴天率',
+          type: 'line',
+          yAxisIndex: 1,
+          smooth: true,
+          data: monthlySorted.map(item => item.sunny_rate ?? (100 - item.cloud)),
+          symbolSize: 6,
+          lineStyle: { width: 2.5, color: '#38bdf8' },
+          itemStyle: { color: '#38bdf8' },
         },
       ],
     };
@@ -251,6 +300,68 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
       chart.dispose();
     };
   }, [data, monthlySorted, selectedIndex]);
+
+  useEffect(() => {
+    if (!data || !tourismChartRef.current || monthlySorted.length !== 12) return;
+
+    const chart = echarts.init(tourismChartRef.current);
+    const option = {
+      backgroundColor: 'transparent',
+      animationDuration: 400,
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: 'rgba(2,6,23,0.92)',
+        borderColor: 'rgba(148,163,184,.18)',
+        textStyle: { color: '#fff' },
+      },
+      grid: { left: '3%', right: '3%', top: 42, bottom: '6%', containLabel: true },
+      xAxis: {
+        type: 'category',
+        data: MONTHS,
+        axisLine: { lineStyle: { color: 'rgba(148,163,184,.20)' } },
+        axisLabel: { color: '#94a3b8' },
+      },
+      yAxis: {
+        type: 'value',
+        min: 0,
+        max: 10,
+        name: '旅游评分 (0-10)',
+        nameTextStyle: { color: '#94a3b8' },
+        splitLine: { lineStyle: { color: 'rgba(148,163,184,.10)' } },
+        axisLabel: { color: '#94a3b8' },
+      },
+      series: [
+        {
+          name: '旅游评分',
+          type: 'line',
+          smooth: true,
+          data: monthlySorted.map(item => item.tourism_score ?? computeTourismScore(item).score),
+          symbolSize: 8,
+          lineStyle: { width: 3, color: '#f472b6' },
+          itemStyle: { color: '#f472b6' },
+          areaStyle: {
+            opacity: 0.18,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: 'rgba(244,114,182,.36)' },
+              { offset: 1, color: 'rgba(244,114,182,0)' },
+            ]),
+          },
+          markPoint: {
+            data: [{ name: '最佳月', value: monthlySorted[bestTourismMonth].tourism_score ?? 0, xAxis: MONTHS[bestTourismMonth], yAxis: monthlySorted[bestTourismMonth].tourism_score ?? 0 }],
+            label: { color: '#e2e8f0' },
+          },
+        },
+      ],
+    };
+
+    chart.setOption(option);
+    const handleResize = () => chart.resize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      chart.dispose();
+    };
+  }, [data, monthlySorted, bestTourismMonth]);
 
   if (!data) {
     return (
@@ -276,21 +387,24 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
       ? '降水适中'
       : '降水偏少';
 
-  const climateSummary = `${data.metadata.city} 年平均气温约 ${data.yearly.avg_temp.toFixed(1)}°C，属于${climateTone}气候；${precipTone}，${humidityTone}。最热月份通常出现在 ${MONTHS[hottest]}，最冷月份在 ${MONTHS[coldest]}；降水峰值一般在 ${MONTHS[wettest]}，最干燥月份多见于 ${MONTHS[driest]}。`;
-  const visitSummary = `综合温度、降水和云量来看，${data.yearly.best_time} 通常更适合到访。全年约有 ${humidMonths} 个月平均湿度在 75% 以上。`;
+  const climateSummary = `${data.metadata.city} 年平均气温约 ${data.yearly.avg_temp.toFixed(1)}°C，属于${climateTone}气候；${precipTone}，${humidityTone}。最热月份通常出现在 ${MONTHS[hottest]}，最冷月份在 ${MONTHS[coldest]}；降水峰值一般在 ${MONTHS[wettest]}，最干燥月份多见于 ${MONTHS[driest]}。全年平均云量约 ${data.yearly.avg_cloud.toFixed(1)}%，晴天率大约 ${Math.max(0, 100 - data.yearly.avg_cloud).toFixed(1)}%。`;
+  const visitSummary = `综合温度、湿度和晴天率来看，${bestTourismMonths} 更适合到访。全年约有 ${humidMonths} 个月平均湿度在 75% 以上，最佳旅游月得分约 ${bestTourismScore.toFixed(1)}，全年平均旅游分约 ${tourismAvg.toFixed(1)}。`;
   const selectedSummary = selected
-    ? `${MONTHS[selectedIndex]} 的均温约 ${selected.temp_avg.toFixed(1)}°C，最高 ${selected.temp_max.toFixed(1)}°C，最低 ${selected.temp_min.toFixed(1)}°C；月降水 ${selected.precip.toFixed(1)} mm，湿度 ${selected.humidity.toFixed(1)}%，风速 ${selected.wind.toFixed(1)} m/s。`
+    ? `${MONTHS[selectedIndex]} 的均温约 ${selected.temp_avg.toFixed(1)}°C，最高 ${selected.temp_max.toFixed(1)}°C，最低 ${selected.temp_min.toFixed(1)}°C；月降水 ${selected.precip.toFixed(1)} mm，湿度 ${selected.humidity.toFixed(1)}%，云量 ${selected.cloud.toFixed(1)}%，晴天率 ${(selected.sunny_rate ?? (100 - selected.cloud)).toFixed(1)}%，旅游评分 ${(selected.tourism_score ?? computeTourismScore(selected).score).toFixed(1)}。`
     : '—';
 
   const metrics = [
     { icon: Thermometer, label: '平均气温', value: `${data.yearly.avg_temp.toFixed(1)}°C`, color: 'text-sky-300' },
     { icon: Droplets, label: '年降水量', value: `${data.yearly.total_precip.toFixed(0)} mm`, color: 'text-cyan-300' },
     { icon: Cloud, label: '平均湿度', value: `${data.yearly.avg_humidity.toFixed(1)}%`, color: 'text-emerald-300' },
+    { icon: Cloud, label: '平均云量', value: `${data.yearly.avg_cloud.toFixed(1)}%`, color: 'text-amber-300' },
+    { icon: Sun, label: '晴天率', value: `${Math.max(0, 100 - data.yearly.avg_cloud).toFixed(1)}%`, color: 'text-sky-300' },
     { icon: Wind, label: '平均风速', value: `${data.yearly.avg_wind.toFixed(2)} m/s`, color: 'text-violet-300' },
     { icon: Sun, label: '太阳辐射', value: `${data.yearly.total_solar.toFixed(0)} kWh/m²`, color: 'text-amber-300' },
     { icon: Waves, label: '水温', value: `${data.yearly.water_temp.toFixed(1)}°C`, color: 'text-blue-300' },
     { icon: Sprout, label: '生长季', value: `${data.yearly.growing_season.toFixed(0)} 天`, color: 'text-lime-300' },
     { icon: Calendar, label: '最佳访问', value: data.yearly.best_time, color: 'text-emerald-200' },
+    { icon: ArrowUpRight, label: '旅游评分', value: data.yearly.tourism_score_avg != null ? `${data.yearly.tourism_score_avg.toFixed(1)} / 10` : '—', color: 'text-pink-300' },
   ];
 
   return (
@@ -359,6 +473,56 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
         <section className="rounded-[24px] border border-white/10 bg-black/20 p-4">
           <div className="mb-3 flex items-center justify-between gap-3">
             <div>
+              <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Travel score</div>
+              <h3 className="mt-1 text-lg font-bold text-white">旅游舒适指数</h3>
+            </div>
+            <div className="rounded-full border border-pink-300/20 bg-pink-300/10 px-3 py-1 text-xs text-pink-200">
+              结合温度 / 湿度 / 晴天率
+            </div>
+          </div>
+          <div ref={tourismChartRef} className="h-[280px] w-full" />
+          <div className="mt-3 text-xs leading-6 text-slate-400">
+            旅游评分由舒适温度、可接受湿度和更高晴天率共同决定；晴天率为 100% - 云量（近似）。
+          </div>
+        </section>
+
+        <section className="rounded-[24px] border border-white/10 bg-black/20 p-4">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div>
+              <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Cloudiness & sunshine</div>
+              <h3 className="mt-1 text-lg font-bold text-white">云量与晴天率</h3>
+            </div>
+            <div className="text-xs text-slate-400">更适合旅游的月份通常晴天率更高</div>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">最晴朗月份</div>
+              <div className="mt-2 text-xl font-bold text-white">{MONTHS[clearest]}</div>
+              <div className="mt-1 text-sm text-slate-300">云量约 {monthlySorted[clearest].cloud.toFixed(1)}%</div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">最阴云月份</div>
+              <div className="mt-2 text-xl font-bold text-white">{MONTHS[cloudiest]}</div>
+              <div className="mt-1 text-sm text-slate-300">云量约 {monthlySorted[cloudiest].cloud.toFixed(1)}%</div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">全年平均云量</div>
+              <div className="mt-2 text-xl font-bold text-white">{data.yearly.avg_cloud.toFixed(1)}%</div>
+              <div className="mt-1 text-sm text-slate-300">对应晴天率约 {Math.max(0, 100 - data.yearly.avg_cloud).toFixed(1)}%</div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">最佳旅游月</div>
+              <div className="mt-2 text-xl font-bold text-white">{MONTHS[bestTourismMonth]}</div>
+              <div className="mt-1 text-sm text-slate-300">评分 {monthlySorted[bestTourismMonth].tourism_score.toFixed(1)} / 10</div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div className="mt-5 grid gap-5 xl:grid-cols-[1.05fr_.95fr]">
+        <section className="rounded-[24px] border border-white/10 bg-black/20 p-4">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div>
               <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Monthly spotlight</div>
               <h3 className="mt-1 text-lg font-bold text-white">{MONTHS[selectedIndex]} 细节</h3>
             </div>
@@ -373,7 +537,11 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
               ['最低温', `${selected.temp_min.toFixed(1)}°C`],
               ['降水', `${selected.precip.toFixed(1)} mm`],
               ['湿度', `${selected.humidity.toFixed(1)}%`],
+              ['云量', `${selected.cloud.toFixed(1)}%`],
+              ['晴天率', `${(selected.sunny_rate ?? (100 - selected.cloud)).toFixed(1)}%`],
+              ['旅游评分', `${(selected.tourism_score ?? computeTourismScore(selected).score).toFixed(1)} / 10`],
               ['风速', `${selected.wind.toFixed(1)} m/s`],
+              ['舒适度', selected.comfort_label || '—'],
             ].map(([k, v]) => (
               <div key={k} className="rounded-2xl border border-white/10 bg-white/5 p-4">
                 <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">{k}</div>
@@ -396,6 +564,8 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
             <div>· 最冷月份：<span className="font-semibold text-white">{MONTHS[coldest]}</span></div>
             <div>· 降水最多：<span className="font-semibold text-white">{MONTHS[wettest]}</span></div>
             <div>· 降水最少：<span className="font-semibold text-white">{MONTHS[driest]}</span></div>
+            <div>· 最晴朗月份：<span className="font-semibold text-white">{MONTHS[clearest]}</span></div>
+            <div>· 最佳旅游月：<span className="font-semibold text-white">{MONTHS[bestTourismMonth]}</span></div>
             <div>· 经验结论：<span className="font-semibold text-white">{data.yearly.best_time}</span></div>
           </div>
           <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm leading-7 text-slate-300/90">
@@ -423,8 +593,11 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
                 <th className="px-4 py-3 font-medium">最低</th>
                 <th className="px-4 py-3 font-medium">降水</th>
                 <th className="px-4 py-3 font-medium">湿度</th>
-                <th className="px-4 py-3 font-medium">风速</th>
                 <th className="px-4 py-3 font-medium">云量</th>
+                <th className="px-4 py-3 font-medium">晴天率</th>
+                <th className="px-4 py-3 font-medium">旅游评分</th>
+                <th className="px-4 py-3 font-medium">舒适度</th>
+                <th className="px-4 py-3 font-medium">风速</th>
                 <th className="px-4 py-3 font-medium">太阳辐射</th>
               </tr>
             </thead>
@@ -437,8 +610,11 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
                   <td className="px-4 py-3">{item.temp_min.toFixed(1)}°C</td>
                   <td className="px-4 py-3">{item.precip.toFixed(1)} mm</td>
                   <td className="px-4 py-3">{item.humidity.toFixed(1)}%</td>
-                  <td className="px-4 py-3">{item.wind.toFixed(1)} m/s</td>
                   <td className="px-4 py-3">{item.cloud.toFixed(1)}%</td>
+                  <td className="px-4 py-3">{(item.sunny_rate ?? (100 - item.cloud)).toFixed(1)}%</td>
+                  <td className="px-4 py-3">{(item.tourism_score ?? computeTourismScore(item).score).toFixed(1)}</td>
+                  <td className="px-4 py-3">{item.comfort_label || '—'}</td>
+                  <td className="px-4 py-3">{item.wind.toFixed(1)} m/s</td>
                   <td className="px-4 py-3">{item.solar.toFixed(0)}</td>
                 </tr>
               ))}

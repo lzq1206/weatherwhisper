@@ -17,9 +17,12 @@
     "total_solar": 1470.84,
     "avg_cloud": 6.9,
     "growing_season": 365,
-    "best_time": "1-12月",
     "water_temp": 24.3,
     "solar_energy": 220.63,
+    "tourism_score_avg": 7.0,
+    "best_tourism_months": "4月、10-11月",
+    "best_time": "4月、10-11月",
+    "tourism_peak_month": 4,
     "overview": "热带/亚热带气候，全年气温较高。 湿润多雨。"
   },
   "monthly": {
@@ -31,7 +34,10 @@
       "wind": 3.2434139784946234,
       "precip": 75.9,
       "solar": 75731.0,
-      "cloud": 7.385752688172043
+      "cloud": 7.385752688172043,
+      "sunny_rate": 92.6,
+      "tourism_score": 5.8,
+      "comfort_label": "偏不舒适"
     },
     "2": {
       "temp_avg": 16.180357142857144,
@@ -41,7 +47,10 @@
       "wind": 4.744791666666667,
       "precip": 53.6,
       "solar": 81635.0,
-      "cloud": 7.809523809523809
+      "cloud": 7.809523809523809,
+      "sunny_rate": 92.2,
+      "tourism_score": 5.9,
+      "comfort_label": "偏不舒适"
     },
     "3": {
       "temp_avg": 18.49489247311828,
@@ -51,7 +60,10 @@
       "wind": 4.079704301075269,
       "precip": 59.6,
       "solar": 120446.0,
-      "cloud": 7.337365591397849
+      "cloud": 7.337365591397849,
+      "sunny_rate": 92.7,
+      "tourism_score": 7.1,
+      "comfort_label": "可接受"
     },
     "4": {
       "temp_avg": 22.16861111111111,
@@ -61,7 +73,10 @@
       "wind": 3.619722222222222,
       "precip": 72.4,
       "solar": 141201.0,
-      "cloud": 6.804166666666666
+      "cloud": 6.804166666666666,
+      "sunny_rate": 93.2,
+      "tourism_score": 8.3,
+      "comfort_label": "可接受"
     },
     "5": {
       "temp_avg": 24.87755376344086,
@@ -71,7 +86,10 @@
       "wind": 3.42755376344086,
       "precip": 140.1,
       "solar": 146778.0,
-      "cloud": 7.268817204301075
+      "cloud": 7.268817204301075,
+      "sunny_rate": 92.7,
+      "tourism_score": 7.7,
+      "comfort_label": "偏不舒适"
     },
     "6": {
       "temp_avg": 27.601805555555554,
@@ -81,7 +99,10 @@
       "wind": 2.3940277777777776,
       "precip": 150.7,
       "solar": 156070.0,
-      "cloud": 7.572222222222222
+      "cloud": 7.572222222222222,
+      "sunny_rate": 92.4,
+      "tourism_score": 6.8,
+      "comfort_label": "偏不舒适"
     },
     "7": {
       "temp_avg": 29.31438172043011,
@@ -91,7 +112,10 @@
       "wind": 2.2864247311827954,
       "precip": 62.5,
       "solar": 183998.0,
-      "cloud": 5.428763440860215
+      "cloud": 5.428763440860215,
+      "sunny_rate": 94.6,
+      "tourism_score": 6.6,
+      "comfort_label": "可接受"
     },
     "8": {
       "temp_avg": 29.04784946236559,
@@ -101,7 +125,10 @@
       "wind": 2.3490591397849463,
       "precip": 170.3,
       "solar": 173871.0,
-      "cloud": 5.43010752688172
+      "cloud": 5.43010752688172,
+      "sunny_rate": 94.6,
+      "tourism_score": 6.5,
+      "comfort_label": "可接受"
     },
     "9": {
       "temp_avg": 27.064305555555556,
@@ -111,7 +138,10 @@
       "wind": 4.418888888888889,
       "precip": 259.3,
       "solar": 138157.0,
-      "cloud": 6.247222222222222
+      "cloud": 6.247222222222222,
+      "sunny_rate": 93.8,
+      "tourism_score": 6.9,
+      "comfort_label": "偏不舒适"
     },
     "10": {
       "temp_avg": 23.778629032258063,
@@ -121,7 +151,10 @@
       "wind": 4.1125,
       "precip": 176.3,
       "solar": 107919.0,
-      "cloud": 6.432795698924731
+      "cloud": 6.432795698924731,
+      "sunny_rate": 93.6,
+      "tourism_score": 8.2,
+      "comfort_label": "可接受"
     },
     "11": {
       "temp_avg": 20.903194444444445,
@@ -131,7 +164,10 @@
       "wind": 4.335833333333333,
       "precip": 176.7,
       "solar": 73618.0,
-      "cloud": 8.125
+      "cloud": 8.125,
+      "sunny_rate": 91.9,
+      "tourism_score": 7.7,
+      "comfort_label": "可接受"
     },
     "12": {
       "temp_avg": 17.333870967741934,
@@ -141,7 +177,10 @@
       "wind": 3.901478494623656,
       "precip": 71.4,
       "solar": 71418.0,
-      "cloud": 6.729838709677419
+      "cloud": 6.729838709677419,
+      "sunny_rate": 93.3,
+      "tourism_score": 6.6,
+      "comfort_label": "可接受"
     }
   }
 }

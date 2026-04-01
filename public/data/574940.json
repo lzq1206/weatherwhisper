@@ -17,9 +17,12 @@
     "total_solar": 1459.02,
     "avg_cloud": 5.7,
     "growing_season": 334,
-    "best_time": "4-4月",
     "water_temp": 19.0,
     "solar_energy": 218.85,
+    "tourism_score_avg": 6.0,
+    "best_tourism_months": "5-6月、9月",
+    "best_time": "5-6月、9月",
+    "tourism_peak_month": 5,
     "overview": "温带气候，四季分明。 降水极丰沛。"
   },
   "monthly": {
@@ -31,7 +34,10 @@
       "wind": 2.87741935483871,
       "precip": 62.1,
       "solar": 83444.0,
-      "cloud": 5.760752688172043
+      "cloud": 5.760752688172043,
+      "sunny_rate": 94.2,
+      "tourism_score": 4.2,
+      "comfort_label": "偏不舒适"
     },
     "2": {
       "temp_avg": 6.786011904761905,
@@ -41,7 +47,10 @@
       "wind": 2.2230654761904765,
       "precip": 57.8,
       "solar": 80910.0,
-      "cloud": 6.662202380952381
+      "cloud": 6.662202380952381,
+      "sunny_rate": 93.3,
+      "tourism_score": 3.9,
+      "comfort_label": "偏不舒适"
     },
     "3": {
       "temp_avg": 11.222983870967742,
@@ -51,7 +60,10 @@
       "wind": 2.0106182795698926,
       "precip": 66.4,
       "solar": 115293.0,
-      "cloud": 6.400537634408602
+      "cloud": 6.400537634408602,
+      "sunny_rate": 93.6,
+      "tourism_score": 4.5,
+      "comfort_label": "偏不舒适"
     },
     "4": {
       "temp_avg": 17.847083333333334,
@@ -61,7 +73,10 @@
       "wind": 3.1025,
       "precip": 77.9,
       "solar": 141962.0,
-      "cloud": 6.276388888888889
+      "cloud": 6.276388888888889,
+      "sunny_rate": 93.7,
+      "tourism_score": 6.8,
+      "comfort_label": "可接受"
     },
     "5": {
       "temp_avg": 22.26559139784946,
@@ -71,7 +86,10 @@
       "wind": 2.2134408602150537,
       "precip": 329.0,
       "solar": 155111.0,
-      "cloud": 7.020161290322581
+      "cloud": 7.020161290322581,
+      "sunny_rate": 93.0,
+      "tourism_score": 8.2,
+      "comfort_label": "可接受"
     },
     "6": {
       "temp_avg": 25.9625,
@@ -81,7 +99,10 @@
       "wind": 2.5504166666666666,
       "precip": 369.0,
       "solar": 142907.0,
-      "cloud": 7.381944444444445
+      "cloud": 7.381944444444445,
+      "sunny_rate": 92.6,
+      "tourism_score": 7.3,
+      "comfort_label": "偏不舒适"
     },
     "7": {
       "temp_avg": 29.48333333333333,
@@ -91,7 +112,10 @@
       "wind": 2.33494623655914,
       "precip": 157.2,
       "solar": 172363.0,
-      "cloud": 6.178763440860215
+      "cloud": 6.178763440860215,
+      "sunny_rate": 93.8,
+      "tourism_score": 6.3,
+      "comfort_label": "可接受"
     },
     "8": {
       "temp_avg": 29.036155913978497,
@@ -101,7 +125,10 @@
       "wind": 2.613037634408602,
       "precip": 195.6,
       "solar": 155825.0,
-      "cloud": 6.553763440860215
+      "cloud": 6.553763440860215,
+      "sunny_rate": 93.4,
+      "tourism_score": 6.4,
+      "comfort_label": "可接受"
     },
     "9": {
       "temp_avg": 24.454722222222223,
@@ -111,7 +138,10 @@
       "wind": 2.202777777777778,
       "precip": 192.5,
       "solar": 127234.0,
-      "cloud": 6.268055555555556
+      "cloud": 6.268055555555556,
+      "sunny_rate": 93.7,
+      "tourism_score": 7.8,
+      "comfort_label": "偏不舒适"
     },
     "10": {
       "temp_avg": 18.88400537634409,
@@ -121,7 +151,10 @@
       "wind": 2.5853494623655915,
       "precip": 117.7,
       "solar": 112757.0,
-      "cloud": 5.353494623655914
+      "cloud": 5.353494623655914,
+      "sunny_rate": 94.6,
+      "tourism_score": 7.2,
+      "comfort_label": "可接受"
     },
     "11": {
       "temp_avg": 12.482083333333334,
@@ -131,7 +164,10 @@
       "wind": 2.102638888888889,
       "precip": 60.7,
       "solar": 87441.0,
-      "cloud": 1.2763888888888888
+      "cloud": 1.2763888888888888,
+      "sunny_rate": 98.7,
+      "tourism_score": 5.3,
+      "comfort_label": "偏不舒适"
     },
     "12": {
       "temp_avg": 6.674193548387097,
@@ -141,7 +177,10 @@
       "wind": 2.098521505376344,
       "precip": 21.7,
       "solar": 83770.0,
-      "cloud": 2.96505376344086
+      "cloud": 2.96505376344086,
+      "sunny_rate": 97.0,
+      "tourism_score": 4.5,
+      "comfort_label": "偏不舒适"
     }
   }
 }

@@ -62,15 +62,80 @@ def get_climate_description(stats):
 def get_best_time(monthly_json):
     best_months = []
     for m, s in monthly_json.items():
-        # Comfort: 18-26C, Precip < 100mm
-        if 15 <= s['temp_avg'] <= 28 and s['precip'] < 100:
-            best_months.append(m)
+        temp = s.get('temp_avg', 0)
+        humidity = s.get('humidity', 100)
+        sunny_rate = s.get('sunny_rate', max(0.0, 100.0 - s.get('cloud', 100)))
+        score = s.get('tourism_score', 0)
+        if 18 <= temp <= 28 and 35 <= humidity <= 75 and sunny_rate >= 35 and score >= 6.0:
+            best_months.append(int(m))
     
-    if not best_months: return "四季皆宜"
+    if not best_months:
+        scored = sorted(((s.get('tourism_score', 0), int(m)) for m, s in monthly_json.items()), reverse=True)
+        if not scored:
+            return "四季皆宜"
+        best_months = [month for _, month in scored[:3]]
     
-    # Range processing
-    if len(best_months) == 12: return "全年"
-    return f"{min(best_months)}-{max(best_months)}月"
+    if len(best_months) == 12:
+        return "全年"
+
+    best_months = sorted(set(best_months))
+    ranges = []
+    start = prev = best_months[0]
+    for m in best_months[1:]:
+        if m == prev + 1:
+            prev = m
+            continue
+        ranges.append((start, prev))
+        start = prev = m
+    ranges.append((start, prev))
+    if len(ranges) == 1:
+        a, b = ranges[0]
+        return f"{a}-{b}月" if a != b else f"{a}月"
+    return "、".join([f"{a}-{b}月" if a != b else f"{a}月" for a, b in ranges])
+
+
+def score_tourism_month(month_stats):
+    temp = float(month_stats['temp_avg'])
+    humidity = float(month_stats['humidity'])
+    cloud = float(month_stats['cloud'])
+    sunny_rate = round(max(0.0, min(100.0, 100.0 - cloud)), 1)
+
+    # Rough comfort model: temperature near 23°C, humidity near 55%, more sunshine is better.
+    temp_score = max(0.0, 1.0 - abs(temp - 23.0) / 13.0)
+    humidity_score = max(0.0, 1.0 - abs(humidity - 55.0) / 45.0)
+    sunny_score = sunny_rate / 100.0
+    tourism_score = round((0.45 * temp_score + 0.25 * humidity_score + 0.30 * sunny_score) * 10.0, 1)
+
+    if 18 <= temp <= 28 and 35 <= humidity <= 75 and sunny_rate >= 35:
+        comfort_label = '舒适'
+    elif 15 <= temp <= 30 and 30 <= humidity <= 80:
+        comfort_label = '可接受'
+    else:
+        comfort_label = '偏不舒适'
+
+    return {
+        'sunny_rate': sunny_rate,
+        'tourism_score': tourism_score,
+        'comfort_label': comfort_label,
+    }
+
+
+def months_to_text(months):
+    if not months:
+        return '四季皆宜'
+    months = sorted(set(int(m) for m in months))
+    if len(months) == 12:
+        return '全年'
+    ranges = []
+    start = prev = months[0]
+    for m in months[1:]:
+        if m == prev + 1:
+            prev = m
+            continue
+        ranges.append((start, prev))
+        start = prev = m
+    ranges.append((start, prev))
+    return '、'.join([f'{a}-{b}月' if a != b else f'{a}月' for a, b in ranges])
 
 def process_station(epw_path):
     print(f"Processing {epw_path}...")
@@ -118,6 +183,8 @@ def process_station(epw_path):
     
     monthly_stats.columns = ['temp_avg', 'temp_max', 'temp_min', 'humidity', 'wind', 'precip', 'solar', 'cloud']
     monthly_json = monthly_stats.to_dict(orient='index')
+    for m, s in monthly_json.items():
+        s.update(score_tourism_month(s))
     
     # Growing season: Days with T_avg > 5C (approximation)
     growing_days = 0
@@ -133,10 +200,18 @@ def process_station(epw_path):
         "total_solar": round(float(df['Solar'].sum() / 1000), 2), # kWh/m2
         "avg_cloud": round(float(df['Cloud'].mean()), 1),
         "growing_season": growing_days,
-        "best_time": get_best_time(monthly_json),
         "water_temp": round(float(df['Temp'].mean() + 1.5), 1), # Proxy estimation
         "solar_energy": round(float(df['Solar'].sum() / 1000 * 0.15), 2), # Solar potential (15% efficiency)
     }
+
+    yearly_scores = [(s['tourism_score'], int(m)) for m, s in monthly_json.items()]
+    yearly_scores.sort(reverse=True)
+    top_months = [month for _, month in yearly_scores[:4] if month]
+    comfy_months = [int(m) for m, s in monthly_json.items() if s['comfort_label'] == '舒适' and s['tourism_score'] >= 6.0]
+    yearly_stats['tourism_score_avg'] = round(sum(s['tourism_score'] for s in monthly_json.values()) / max(len(monthly_json), 1), 1)
+    yearly_stats['best_tourism_months'] = months_to_text(comfy_months or top_months[:3])
+    yearly_stats['best_time'] = yearly_stats['best_tourism_months']
+    yearly_stats['tourism_peak_month'] = top_months[0] if top_months else None
     
     yearly_stats["overview"] = get_climate_description(yearly_stats)
     

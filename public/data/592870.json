@@ -17,9 +17,12 @@
     "total_solar": 1433.73,
     "avg_cloud": 6.3,
     "growing_season": 364,
-    "best_time": "2-12月",
     "water_temp": 24.2,
     "solar_energy": 215.06,
+    "tourism_score_avg": 7.1,
+    "best_tourism_months": "10-11月",
+    "best_time": "10-11月",
+    "tourism_peak_month": 10,
     "overview": "热带/亚热带气候，全年气温较高。 降水极丰沛。"
   },
   "monthly": {
@@ -31,7 +34,10 @@
       "wind": 3.0306451612903227,
       "precip": 35.5,
       "solar": 93783.0,
-      "cloud": 5.043010752688172
+      "cloud": 5.043010752688172,
+      "sunny_rate": 95.0,
+      "tourism_score": 6.1,
+      "comfort_label": "偏不舒适"
     },
     "2": {
       "temp_avg": 15.356994047619047,
@@ -41,7 +47,10 @@
       "wind": 2.2154761904761906,
       "precip": 50.9,
       "solar": 85873.0,
-      "cloud": 6.0461309523809526
+      "cloud": 6.0461309523809526,
+      "sunny_rate": 94.0,
+      "tourism_score": 6.3,
+      "comfort_label": "可接受"
     },
     "3": {
       "temp_avg": 18.721505376344084,
@@ -51,7 +60,10 @@
       "wind": 2.1931451612903228,
       "precip": 55.6,
       "solar": 103199.0,
-      "cloud": 8.071236559139784
+      "cloud": 8.071236559139784,
+      "sunny_rate": 91.9,
+      "tourism_score": 7.1,
+      "comfort_label": "可接受"
     },
     "4": {
       "temp_avg": 22.446944444444444,
@@ -61,7 +73,10 @@
       "wind": 2.091111111111111,
       "precip": 294.6,
       "solar": 108184.0,
-      "cloud": 8.73611111111111
+      "cloud": 8.73611111111111,
+      "sunny_rate": 91.3,
+      "tourism_score": 7.8,
+      "comfort_label": "偏不舒适"
     },
     "5": {
       "temp_avg": 26.196236559139784,
@@ -71,7 +86,10 @@
       "wind": 2.1036290322580644,
       "precip": 280.2,
       "solar": 124887.0,
-      "cloud": 7.684139784946237
+      "cloud": 7.684139784946237,
+      "sunny_rate": 92.3,
+      "tourism_score": 7.4,
+      "comfort_label": "可接受"
     },
     "6": {
       "temp_avg": 27.917222222222225,
@@ -81,7 +99,10 @@
       "wind": 1.9186111111111113,
       "precip": 365.6,
       "solar": 136036.0,
-      "cloud": 7.493055555555555
+      "cloud": 7.493055555555555,
+      "sunny_rate": 92.5,
+      "tourism_score": 6.6,
+      "comfort_label": "偏不舒适"
     },
     "7": {
       "temp_avg": 28.875940860215056,
@@ -91,7 +112,10 @@
       "wind": 2.5698924731182795,
       "precip": 292.1,
       "solar": 151280.0,
-      "cloud": 6.021505376344086
+      "cloud": 6.021505376344086,
+      "sunny_rate": 94.0,
+      "tourism_score": 6.4,
+      "comfort_label": "可接受"
     },
     "8": {
       "temp_avg": 28.948252688172044,
@@ -101,7 +125,10 @@
       "wind": 2.4173387096774195,
       "precip": 408.7,
       "solar": 139203.0,
-      "cloud": 6.068548387096774
+      "cloud": 6.068548387096774,
+      "sunny_rate": 93.9,
+      "tourism_score": 6.4,
+      "comfort_label": "可接受"
     },
     "9": {
       "temp_avg": 27.689027777777774,
@@ -111,7 +138,10 @@
       "wind": 2.4568055555555555,
       "precip": 215.8,
       "solar": 139539.0,
-      "cloud": 5.1097222222222225
+      "cloud": 5.1097222222222225,
+      "sunny_rate": 94.9,
+      "tourism_score": 7.0,
+      "comfort_label": "可接受"
     },
     "10": {
       "temp_avg": 25.026478494623657,
@@ -121,7 +151,10 @@
       "wind": 2.07997311827957,
       "precip": 13.2,
       "solar": 136764.0,
-      "cloud": 5.943548387096774
+      "cloud": 5.943548387096774,
+      "sunny_rate": 94.1,
+      "tourism_score": 8.5,
+      "comfort_label": "舒适"
     },
     "11": {
       "temp_avg": 20.45611111111111,
@@ -131,7 +164,10 @@
       "wind": 2.537916666666667,
       "precip": 31.400000000000002,
       "solar": 112985.0,
-      "cloud": 4.343055555555556
+      "cloud": 4.343055555555556,
+      "sunny_rate": 95.7,
+      "tourism_score": 8.2,
+      "comfort_label": "舒适"
     },
     "12": {
       "temp_avg": 16.00900537634409,
@@ -141,7 +177,10 @@
       "wind": 3.079569892473118,
       "precip": 59.9,
       "solar": 102001.0,
-      "cloud": 4.823924731182796
+      "cloud": 4.823924731182796,
+      "sunny_rate": 95.2,
+      "tourism_score": 6.9,
+      "comfort_label": "可接受"
     }
   }
 }

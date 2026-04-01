@@ -17,9 +17,12 @@
     "total_solar": 1222.51,
     "avg_cloud": 7.0,
     "growing_season": 289,
-    "best_time": "4-10月",
     "water_temp": 17.3,
     "solar_energy": 183.38,
+    "tourism_score_avg": 6.0,
+    "best_tourism_months": "5-6月、9月",
+    "best_time": "5-6月、9月",
+    "tourism_peak_month": 9,
     "overview": "温带气候，四季分明。 干旱/半干旱地区。"
   },
   "monthly": {
@@ -31,7 +34,10 @@
       "wind": 2.3803763440860215,
       "precip": 0.0,
       "solar": 62686.0,
-      "cloud": 6.354838709677419
+      "cloud": 6.354838709677419,
+      "sunny_rate": 93.6,
+      "tourism_score": 4.2,
+      "comfort_label": "偏不舒适"
     },
     "2": {
       "temp_avg": 3.754627976190476,
@@ -41,7 +47,10 @@
       "wind": 2.4732142857142856,
       "precip": 0.0,
       "solar": 67252.0,
-      "cloud": 6.424107142857143
+      "cloud": 6.424107142857143,
+      "sunny_rate": 93.6,
+      "tourism_score": 4.2,
+      "comfort_label": "偏不舒适"
     },
     "3": {
       "temp_avg": 9.206048387096775,
@@ -51,7 +60,10 @@
       "wind": 3.0161290322580645,
       "precip": 0.0,
       "solar": 101385.0,
-      "cloud": 6.813172043010753
+      "cloud": 6.813172043010753,
+      "sunny_rate": 93.2,
+      "tourism_score": 4.1,
+      "comfort_label": "偏不舒适"
     },
     "4": {
       "temp_avg": 15.658500000000002,
@@ -61,7 +73,10 @@
       "wind": 3.1944444444444446,
       "precip": 0.0,
       "solar": 113104.0,
-      "cloud": 7.144444444444445
+      "cloud": 7.144444444444445,
+      "sunny_rate": 92.9,
+      "tourism_score": 6.0,
+      "comfort_label": "可接受"
     },
     "5": {
       "temp_avg": 21.674099462365593,
@@ -71,7 +86,10 @@
       "wind": 3.1155913978494625,
       "precip": 0.0,
       "solar": 133433.0,
-      "cloud": 7.342741935483871
+      "cloud": 7.342741935483871,
+      "sunny_rate": 92.7,
+      "tourism_score": 8.0,
+      "comfort_label": "可接受"
     },
     "6": {
       "temp_avg": 25.508458333333333,
@@ -81,7 +99,10 @@
       "wind": 3.0083333333333333,
       "precip": 0.0,
       "solar": 132485.0,
-      "cloud": 7.402777777777778
+      "cloud": 7.402777777777778,
+      "sunny_rate": 92.6,
+      "tourism_score": 7.6,
+      "comfort_label": "可接受"
     },
     "7": {
       "temp_avg": 27.770967741935483,
@@ -91,7 +112,10 @@
       "wind": 2.8736559139784945,
       "precip": 0.0,
       "solar": 137599.0,
-      "cloud": 7.40994623655914
+      "cloud": 7.40994623655914,
+      "sunny_rate": 92.6,
+      "tourism_score": 6.8,
+      "comfort_label": "可接受"
     },
     "8": {
       "temp_avg": 27.05186827956989,
@@ -101,7 +125,10 @@
       "wind": 2.0806451612903225,
       "precip": 0.0,
       "solar": 133696.0,
-      "cloud": 7.405913978494624
+      "cloud": 7.405913978494624,
+      "sunny_rate": 92.6,
+      "tourism_score": 7.0,
+      "comfort_label": "可接受"
     },
     "9": {
       "temp_avg": 23.36231944444444,
@@ -111,7 +138,10 @@
       "wind": 2.3194444444444446,
       "precip": 0.0,
       "solar": 118158.0,
-      "cloud": 7.383333333333334
+      "cloud": 7.383333333333334,
+      "sunny_rate": 92.6,
+      "tourism_score": 8.3,
+      "comfort_label": "可接受"
     },
     "10": {
       "temp_avg": 17.967930107526882,
@@ -121,7 +151,10 @@
       "wind": 2.6801075268817205,
       "precip": 0.0,
       "solar": 95052.0,
-      "cloud": 7.251344086021505
+      "cloud": 7.251344086021505,
+      "sunny_rate": 92.7,
+      "tourism_score": 6.7,
+      "comfort_label": "可接受"
     },
     "11": {
       "temp_avg": 10.873416666666666,
@@ -131,7 +164,10 @@
       "wind": 2.3722222222222222,
       "precip": 0.0,
       "solar": 73190.0,
-      "cloud": 6.963888888888889
+      "cloud": 6.963888888888889,
+      "sunny_rate": 93.0,
+      "tourism_score": 4.4,
+      "comfort_label": "偏不舒适"
     },
     "12": {
       "temp_avg": 3.7126612903225804,
@@ -141,7 +177,10 @@
       "wind": 1.7956989247311828,
       "precip": 0.0,
       "solar": 54474.0,
-      "cloud": 6.466397849462366
+      "cloud": 6.466397849462366,
+      "sunny_rate": 93.5,
+      "tourism_score": 4.2,
+      "comfort_label": "偏不舒适"
     }
   }
 }

@@ -21,9 +21,12 @@
         "total_solar": 1444.31,
         "avg_cloud": 5.9,
         "growing_season": 328,
-        "best_time": "4-10月",
         "water_temp": 18.8,
         "solar_energy": 216.65,
+        "tourism_score_avg": 6.2,
+        "best_tourism_months": "9-10月",
+        "best_time": "9-10月",
+        "tourism_peak_month": 5,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -47,9 +50,12 @@
         "total_solar": 1222.51,
         "avg_cloud": 7.0,
         "growing_season": 289,
-        "best_time": "4-10月",
         "water_temp": 17.3,
         "solar_energy": 183.38,
+        "tourism_score_avg": 6.0,
+        "best_tourism_months": "5-6月、9月",
+        "best_time": "5-6月、9月",
+        "tourism_peak_month": 9,
         "overview": "温带气候，四季分明。 干旱/半干旱地区。"
       }
     },
@@ -73,9 +79,12 @@
         "total_solar": 1562.6,
         "avg_cloud": 5.1,
         "growing_season": 283,
-        "best_time": "4-10月",
         "water_temp": 16.2,
         "solar_energy": 234.39,
+        "tourism_score_avg": 6.3,
+        "best_tourism_months": "5-6月",
+        "best_time": "5-6月",
+        "tourism_peak_month": 5,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -99,9 +108,12 @@
         "total_solar": 1195.37,
         "avg_cloud": 7.1,
         "growing_season": 313,
-        "best_time": "4-10月",
         "water_temp": 17.7,
         "solar_energy": 179.31,
+        "tourism_score_avg": 5.9,
+        "best_tourism_months": "5-6月、9月",
+        "best_time": "5-6月、9月",
+        "tourism_peak_month": 9,
         "overview": "温带气候，四季分明。 干旱/半干旱地区。"
       }
     },
@@ -125,9 +137,12 @@
         "total_solar": 1530.09,
         "avg_cloud": 5.1,
         "growing_season": 295,
-        "best_time": "4-10月",
         "water_temp": 17.4,
         "solar_energy": 229.51,
+        "tourism_score_avg": 6.3,
+        "best_tourism_months": "5-6月",
+        "best_time": "5-6月",
+        "tourism_peak_month": 5,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -151,9 +166,12 @@
         "total_solar": 1407.15,
         "avg_cloud": 6.5,
         "growing_season": 312,
-        "best_time": "10-10月",
         "water_temp": 17.0,
         "solar_energy": 211.07,
+        "tourism_score_avg": 5.9,
+        "best_tourism_months": "5-6月、9月",
+        "best_time": "5-6月、9月",
+        "tourism_peak_month": 9,
         "overview": "温带气候，四季分明。 降水极丰沛。"
       }
     },
@@ -177,9 +195,12 @@
         "total_solar": 1457.34,
         "avg_cloud": 5.5,
         "growing_season": 315,
-        "best_time": "4-10月",
         "water_temp": 18.2,
         "solar_energy": 218.6,
+        "tourism_score_avg": 6.3,
+        "best_tourism_months": "5-6月",
+        "best_time": "5-6月",
+        "tourism_peak_month": 5,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -203,9 +224,12 @@
         "total_solar": 1569.86,
         "avg_cloud": 3.1,
         "growing_season": 247,
-        "best_time": "5-9月",
         "water_temp": 14.3,
         "solar_energy": 235.48,
+        "tourism_score_avg": 6.6,
+        "best_tourism_months": "5-7月、9月",
+        "best_time": "5-7月、9月",
+        "tourism_peak_month": 6,
         "overview": "温带气候，四季分明。 半湿润地区。"
       }
     },
@@ -229,9 +253,12 @@
         "total_solar": 1567.8,
         "avg_cloud": 6.5,
         "growing_season": 365,
-        "best_time": "3-12月",
         "water_temp": 22.9,
         "solar_energy": 235.17,
+        "tourism_score_avg": 6.9,
+        "best_tourism_months": "10-11月",
+        "best_time": "10-11月",
+        "tourism_peak_month": 10,
         "overview": "热带/亚热带气候，全年气温较高。 湿润多雨。"
       }
     },
@@ -255,9 +282,12 @@
         "total_solar": 1433.73,
         "avg_cloud": 6.3,
         "growing_season": 364,
-        "best_time": "2-12月",
         "water_temp": 24.2,
         "solar_energy": 215.06,
+        "tourism_score_avg": 7.1,
+        "best_tourism_months": "10-11月",
+        "best_time": "10-11月",
+        "tourism_peak_month": 10,
         "overview": "热带/亚热带气候，全年气温较高。 降水极丰沛。"
       }
     },
@@ -281,9 +311,12 @@
         "total_solar": 1610.38,
         "avg_cloud": 6.3,
         "growing_season": 365,
-        "best_time": "2-12月",
         "water_temp": 24.7,
         "solar_energy": 241.56,
+        "tourism_score_avg": 7.2,
+        "best_tourism_months": "9-11月",
+        "best_time": "9-11月",
+        "tourism_peak_month": 11,
         "overview": "热带/亚热带气候，全年气温较高。 降水极丰沛。"
       }
     },
@@ -307,9 +340,12 @@
         "total_solar": 1459.02,
         "avg_cloud": 5.7,
         "growing_season": 334,
-        "best_time": "4-4月",
         "water_temp": 19.0,
         "solar_energy": 218.85,
+        "tourism_score_avg": 6.0,
+        "best_tourism_months": "5-6月、9月",
+        "best_time": "5-6月、9月",
+        "tourism_peak_month": 5,
         "overview": "温带气候，四季分明。 降水极丰沛。"
       }
     },
@@ -333,9 +369,12 @@
         "total_solar": 1462.24,
         "avg_cloud": 3.0,
         "growing_season": 206,
-        "best_time": "5-9月",
         "water_temp": 6.9,
         "solar_energy": 219.34,
+        "tourism_score_avg": 6.2,
+        "best_tourism_months": "6月",
+        "best_time": "6月",
+        "tourism_peak_month": 6,
         "overview": "寒冷气候，冬季漫长。 半湿润地区。"
       }
     },
@@ -359,9 +398,12 @@
         "total_solar": 1493.38,
         "avg_cloud": 4.9,
         "growing_season": 312,
-        "best_time": "8-10月",
         "water_temp": 17.7,
         "solar_energy": 224.01,
+        "tourism_score_avg": 6.2,
+        "best_tourism_months": "5月",
+        "best_time": "5月",
+        "tourism_peak_month": 9,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -385,9 +427,12 @@
         "total_solar": 1624.3,
         "avg_cloud": 4.9,
         "growing_season": 248,
-        "best_time": "6-9月",
         "water_temp": 12.7,
         "solar_energy": 243.65,
+        "tourism_score_avg": 6.0,
+        "best_tourism_months": "9月",
+        "best_time": "9月",
+        "tourism_peak_month": 9,
         "overview": "温带气候，四季分明。 半湿润地区。"
       }
     },
@@ -411,9 +456,12 @@
         "total_solar": 1227.44,
         "avg_cloud": 4.3,
         "growing_season": 353,
-        "best_time": "3-10月",
         "water_temp": 19.5,
         "solar_energy": 184.12,
+        "tourism_score_avg": 6.6,
+        "best_tourism_months": "4-6月、8月",
+        "best_time": "4-6月、8月",
+        "tourism_peak_month": 5,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -437,9 +485,12 @@
         "total_solar": 1592.21,
         "avg_cloud": 4.5,
         "growing_season": 268,
-        "best_time": "5-10月",
         "water_temp": 14.7,
         "solar_energy": 238.83,
+        "tourism_score_avg": 6.3,
+        "best_tourism_months": "9月",
+        "best_time": "9月",
+        "tourism_peak_month": 9,
         "overview": "温带气候，四季分明。 半湿润地区。"
       }
     },
@@ -463,9 +514,12 @@
         "total_solar": 1460.14,
         "avg_cloud": 5.9,
         "growing_season": 337,
-        "best_time": "9-10月",
         "water_temp": 18.8,
         "solar_energy": 219.02,
+        "tourism_score_avg": 6.2,
+        "best_tourism_months": "5月、9-10月",
+        "best_time": "5月、9-10月",
+        "tourism_peak_month": 9,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -489,9 +543,12 @@
         "total_solar": 1615.67,
         "avg_cloud": 2.7,
         "growing_season": 263,
-        "best_time": "4-9月",
         "water_temp": 15.0,
         "solar_energy": 242.35,
+        "tourism_score_avg": 6.7,
+        "best_tourism_months": "5-7月、9月",
+        "best_time": "5-7月、9月",
+        "tourism_peak_month": 9,
         "overview": "温带气候，四季分明。 半湿润地区。"
       }
     },
@@ -515,9 +572,12 @@
         "total_solar": 1658.19,
         "avg_cloud": 3.3,
         "growing_season": 213,
-        "best_time": "5-9月",
         "water_temp": 10.2,
         "solar_energy": 248.73,
+        "tourism_score_avg": 6.2,
+        "best_tourism_months": "5-9月",
+        "best_time": "5-9月",
+        "tourism_peak_month": 8,
         "overview": "寒冷气候，冬季漫长。 干旱/半干旱地区。"
       }
     },
@@ -541,9 +601,12 @@
         "total_solar": 1673.83,
         "avg_cloud": 5.6,
         "growing_season": 359,
-        "best_time": "4-10月",
         "water_temp": 16.9,
         "solar_energy": 251.08,
+        "tourism_score_avg": 6.3,
+        "best_tourism_months": "5月",
+        "best_time": "5月",
+        "tourism_peak_month": 5,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -567,9 +630,12 @@
         "total_solar": 1399.53,
         "avg_cloud": 5.8,
         "growing_season": 327,
-        "best_time": "4-10月",
         "water_temp": 18.7,
         "solar_energy": 209.93,
+        "tourism_score_avg": 6.1,
+        "best_tourism_months": "5月、9-10月",
+        "best_time": "5月、9-10月",
+        "tourism_peak_month": 9,
         "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
@@ -593,9 +659,12 @@
         "total_solar": 1470.84,
         "avg_cloud": 6.9,
         "growing_season": 365,
-        "best_time": "1-12月",
         "water_temp": 24.3,
         "solar_energy": 220.63,
+        "tourism_score_avg": 7.0,
+        "best_tourism_months": "4月、10-11月",
+        "best_time": "4月、10-11月",
+        "tourism_peak_month": 4,
         "overview": "热带/亚热带气候，全年气温较高。 湿润多雨。"
       }
     }

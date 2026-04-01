@@ -7,6 +7,7 @@ WeatherWhisper is a China climate visualization site designed to feel closer to 
   - annual summary
   - monthly temperature curves
   - precipitation / humidity / wind trends
+  - cloudiness / sunshine / tourism score
   - month spotlight table
   - best time to visit
 - Lets you switch between major East Asian climate stations, including China’s key cities and Taipei
