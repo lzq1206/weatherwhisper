@@ -9,7 +9,7 @@ BASE_URL = "https://climate.onebuilding.org/WMO_Region_2_Asia/CHN_China/"
 INDEX_URL = BASE_URL + "index.html"
 RAW_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "raw")
 
-def crawl_china_data(limit=None):
+def crawl_china_data(limit=None, extract_all=False):
     if not os.path.exists(RAW_DIR):
         os.makedirs(RAW_DIR, exist_ok=True)
 
@@ -41,7 +41,9 @@ def crawl_china_data(limit=None):
             
             with zipfile.ZipFile(io.BytesIO(r.content)) as z:
                 for file_info in z.infolist():
-                    if file_info.filename.lower().endswith(('.epw', '.stat')):
+                    if file_info.is_dir():
+                        continue
+                    if extract_all or file_info.filename.lower().endswith(('.epw', '.stat')):
                         # Extract to RAW_DIR
                         z.extract(file_info, RAW_DIR)
                         print(f"  Extracted: {file_info.filename}")
@@ -51,6 +53,7 @@ def crawl_china_data(limit=None):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Clean energy building climate data crawler.")
     parser.add_argument("--limit", type=int, default=None, help="Limit the number of files to download.")
+    parser.add_argument("--extract-all", action="store_true", help="Extract all files from ZIP archives, not only .epw/.stat.")
     args = parser.parse_args()
     
-    crawl_china_data(limit=args.limit)
+    crawl_china_data(limit=args.limit, extract_all=args.extract_all)

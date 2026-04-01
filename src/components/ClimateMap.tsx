@@ -3,7 +3,6 @@ import DeckGL from '@deck.gl/react';
 import { ScatterplotLayer } from '@deck.gl/layers';
 import { Map } from 'react-map-gl/maplibre';
 import InterpolationLayer from '../layers/InterpolationLayer';
-import { useTheme } from '../context/ThemeContext';
 
 interface StationFeature {
   type: 'Feature';
@@ -40,7 +39,7 @@ const METRICS = [
 const ClimateMap: React.FC<ClimateMapProps> = ({ onStationSelect, selectedMonth }) => {
   const [data, setData] = useState<StationFeature[]>([]);
   const [metric, setMetric] = useState('avg_temp');
-  const { theme } = useTheme();
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
   useEffect(() => {
     const baseUrl = window.location.hostname === 'localhost' ? '' : '/weatherwhisper';
@@ -48,6 +47,14 @@ const ClimateMap: React.FC<ClimateMapProps> = ({ onStationSelect, selectedMonth 
       .then(res => res.json())
       .then(json => setData(json.features))
       .catch(err => console.error('Failed to load stations:', err));
+  }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const applyTheme = () => setTheme(mq.matches ? 'dark' : 'light');
+    applyTheme();
+    mq.addEventListener('change', applyTheme);
+    return () => mq.removeEventListener('change', applyTheme);
   }, []);
 
   const layers = useMemo(() => [

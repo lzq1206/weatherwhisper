@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 import { X, Thermometer, Droplets, Wind, Sun, Cloud, Waves, Calendar, Sprout, Zap } from 'lucide-react';
 
 interface StationData {
-  metadata: { city: string; state: string; wmo: string };
+  metadata: { city: string; state: string; country?: string; wmo: string };
   yearly: { 
     avg_temp: number; 
     total_precip: number; 
@@ -15,7 +15,7 @@ interface StationData {
     growing_season: number;
     best_time: string;
     overview: string;
-    solar_potential: number;
+    solar_energy: number;
   };
   monthly: Record<string, { 
     temp_avg: number; 
@@ -34,20 +34,34 @@ interface ClimateDashboardProps {
   onClose: () => void;
 }
 
+const HIGH_HUMIDITY_THRESHOLD = 75;
+const MEDIUM_HUMIDITY_THRESHOLD = 60;
+const WARM_TEMP_THRESHOLD = 22;
+const COOL_TEMP_THRESHOLD = 10;
+
 const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, onClose }) => {
   const [data, setData] = useState<StationData | null>(null);
   const chartRef = useRef<HTMLDivElement>(null);
+  const monthlySorted = useMemo(
+    () =>
+      data
+        ? Object.entries(data.monthly)
+            .sort(([a], [b]) => Number(a) - Number(b))
+            .map(([, value]) => value)
+        : [],
+    [data]
+  );
 
   useEffect(() => {
     const baseUrl = window.location.hostname === 'localhost' ? '' : '/weatherwhisper';
-    fetch(`${baseUrl}/data/processed/${stationId}.json`)
+    fetch(`${baseUrl}/data/${stationId}.json`)
       .then(res => res.json())
       .then(setData)
       .catch(err => console.error('Failed to load station data:', err));
   }, [stationId]);
 
   useEffect(() => {
-    if (!data || !chartRef.current) return;
+    if (!data || !chartRef.current || monthlySorted.length === 0) return;
 
     const chart = echarts.init(chartRef.current);
     const months = Array.from({ length: 12 }, (_, i) => `${i + 1}月`);
@@ -98,7 +112,7 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, onClose 
           name: '平均温度',
           type: 'line',
           smooth: true,
-          data: Object.values(data.monthly).map(m => m.temp_avg),
+          data: monthlySorted.map(m => m.temp_avg),
           itemStyle: { color: '#3b82f6' },
           areaStyle: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
@@ -111,7 +125,7 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, onClose 
           name: '降水量',
           type: 'bar',
           yAxisIndex: 1,
-          data: Object.values(data.monthly).map(m => m.precip),
+          data: monthlySorted.map(m => m.precip),
           itemStyle: { color: 'rgba(96,165,250,0.4)' }
         }
       ]
@@ -124,9 +138,19 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, onClose 
       window.removeEventListener('resize', handleResize);
       chart.dispose();
     };
-  }, [data]);
+  }, [data, monthlySorted]);
 
   if (!data) return null;
+
+  const hottestIndex = monthlySorted.reduce((best, m, idx) => (m.temp_avg > monthlySorted[best].temp_avg ? idx : best), 0);
+  const coldestIndex = monthlySorted.reduce((best, m, idx) => (m.temp_avg < monthlySorted[best].temp_avg ? idx : best), 0);
+  const rainiestIndex = monthlySorted.reduce((best, m, idx) => (m.precip > monthlySorted[best].precip ? idx : best), 0);
+  const humidMonths = monthlySorted.filter(m => m.humidity >= HIGH_HUMIDITY_THRESHOLD).length;
+  const monthLabel = (idx: number) => `${idx + 1}月`;
+  const seasonalText = data.yearly.avg_temp >= WARM_TEMP_THRESHOLD ? '全年偏暖湿润' : data.yearly.avg_temp >= COOL_TEMP_THRESHOLD ? '四季分明' : '全年偏冷';
+  const humidityText = data.yearly.avg_humidity >= HIGH_HUMIDITY_THRESHOLD ? '体感偏闷' : data.yearly.avg_humidity >= MEDIUM_HUMIDITY_THRESHOLD ? '湿度适中' : '整体较干燥';
+  const weathersparkStyleSummary = `${data.metadata.city}${seasonalText}，${humidityText}；全年平均气温约${data.yearly.avg_temp}°C，通常在${Math.round(monthlySorted[coldestIndex].temp_min)}°C到${Math.round(monthlySorted[hottestIndex].temp_max)}°C之间变化。`;
+  const bestVisitText = `根据旅游舒适度（温度、云量和降水综合），推荐出行时间为${data.yearly.best_time}。`;
 
   const metrics = [
     { icon: Thermometer, label: '平均气温', value: `${data.yearly.avg_temp}°C`, color: 'text-blue-400' },
@@ -160,6 +184,17 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, onClose 
             <p className="text-white/80 leading-relaxed text-sm">
               {data.yearly.overview}
             </p>
+          </div>
+        </section>
+
+        <section>
+          <h3 className="text-xs font-bold text-white/30 uppercase tracking-[0.2em] mb-4">WeatherSpark Style / 全年气候解读</h3>
+          <div className="bg-white/5 rounded-2xl p-4 border border-white/5 space-y-2 text-sm text-white/80 leading-relaxed">
+            <p>{weathersparkStyleSummary}</p>
+            <p>{bestVisitText}</p>
+            <p>{`${monthLabel(hottestIndex)}最热（均温${monthlySorted[hottestIndex].temp_avg.toFixed(1)}°C），${monthLabel(coldestIndex)}最冷（均温${monthlySorted[coldestIndex].temp_avg.toFixed(1)}°C）。`}</p>
+            <p>{`${monthLabel(rainiestIndex)}降水最多（${monthlySorted[rainiestIndex].precip.toFixed(1)} mm）；全年年降水量约${data.yearly.total_precip} mm。`}</p>
+            <p>{`全年约有${humidMonths}个月平均湿度在75%以上，年平均风速${data.yearly.avg_wind} m/s，太阳辐射总量${data.yearly.total_solar} kWh/m²。`}</p>
           </div>
         </section>
 

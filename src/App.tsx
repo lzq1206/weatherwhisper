@@ -10,9 +10,8 @@ function App() {
   return (
     <div className="App w-full h-full relative">
       <ClimateMap 
-        selectedStation={selectedStation} 
-        setSelectedStation={setSelectedStation}
-        currentMonth={currentMonth}
+        onStationSelect={setSelectedStation}
+        selectedMonth={currentMonth}
       />
       
       <TimeSlider 
