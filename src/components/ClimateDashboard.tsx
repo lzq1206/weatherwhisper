@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 import { X, Thermometer, Droplets, Wind, Sun, Cloud, Waves, Calendar, Sprout, Zap } from 'lucide-react';
 
@@ -34,9 +34,23 @@ interface ClimateDashboardProps {
   onClose: () => void;
 }
 
+const HIGH_HUMIDITY_THRESHOLD = 75;
+const MEDIUM_HUMIDITY_THRESHOLD = 60;
+const WARM_TEMP_THRESHOLD = 22;
+const COOL_TEMP_THRESHOLD = 10;
+
 const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, onClose }) => {
   const [data, setData] = useState<StationData | null>(null);
   const chartRef = useRef<HTMLDivElement>(null);
+  const monthlySorted = useMemo(
+    () =>
+      data
+        ? Object.entries(data.monthly)
+            .sort(([a], [b]) => Number(a) - Number(b))
+            .map(([, value]) => value)
+        : [],
+    [data]
+  );
 
   useEffect(() => {
     const baseUrl = window.location.hostname === 'localhost' ? '' : '/weatherwhisper';
@@ -47,7 +61,7 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, onClose 
   }, [stationId]);
 
   useEffect(() => {
-    if (!data || !chartRef.current) return;
+    if (!data || !chartRef.current || monthlySorted.length === 0) return;
 
     const chart = echarts.init(chartRef.current);
     const months = Array.from({ length: 12 }, (_, i) => `${i + 1}月`);
@@ -124,19 +138,18 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, onClose 
       window.removeEventListener('resize', handleResize);
       chart.dispose();
     };
-  }, [data]);
+  }, [data, monthlySorted]);
 
   if (!data) return null;
 
-  const monthlySorted = Object.entries(data.monthly)
-    .sort(([a], [b]) => Number(a) - Number(b))
-    .map(([, value]) => value);
   const hottestIndex = monthlySorted.reduce((best, m, idx) => (m.temp_avg > monthlySorted[best].temp_avg ? idx : best), 0);
   const coldestIndex = monthlySorted.reduce((best, m, idx) => (m.temp_avg < monthlySorted[best].temp_avg ? idx : best), 0);
   const rainiestIndex = monthlySorted.reduce((best, m, idx) => (m.precip > monthlySorted[best].precip ? idx : best), 0);
-  const humidMonths = monthlySorted.filter(m => m.humidity >= 75).length;
+  const humidMonths = monthlySorted.filter(m => m.humidity >= HIGH_HUMIDITY_THRESHOLD).length;
   const monthLabel = (idx: number) => `${idx + 1}月`;
-  const weathersparkStyleSummary = `${data.metadata.city}夏季偏热潮湿、冬季偏冷；全年平均气温约${data.yearly.avg_temp}°C，通常在${Math.round(monthlySorted[coldestIndex].temp_min)}°C到${Math.round(monthlySorted[hottestIndex].temp_max)}°C之间变化。`;
+  const seasonalText = data.yearly.avg_temp >= WARM_TEMP_THRESHOLD ? '全年偏暖湿润' : data.yearly.avg_temp >= COOL_TEMP_THRESHOLD ? '四季分明' : '全年偏冷';
+  const humidityText = data.yearly.avg_humidity >= HIGH_HUMIDITY_THRESHOLD ? '体感偏闷' : data.yearly.avg_humidity >= MEDIUM_HUMIDITY_THRESHOLD ? '湿度适中' : '整体较干燥';
+  const weathersparkStyleSummary = `${data.metadata.city}${seasonalText}，${humidityText}；全年平均气温约${data.yearly.avg_temp}°C，通常在${Math.round(monthlySorted[coldestIndex].temp_min)}°C到${Math.round(monthlySorted[hottestIndex].temp_max)}°C之间变化。`;
   const bestVisitText = `根据旅游舒适度（温度、云量和降水综合），推荐出行时间为${data.yearly.best_time}。`;
 
   const metrics = [

@@ -5,7 +5,7 @@ climate analysis and where to go
 Download China region climate datasets from OneBuilding:
 
 ```bash
-python3 /home/runner/work/weatherwhisper/weatherwhisper/scripts/crawler.py --extract-all
+python3 scripts/crawler.py --extract-all
 ```
 
 - 默认会抓取 `https://climate.onebuilding.org/WMO_Region_2_Asia/CHN_China/index.html` 下的全部 ZIP 链接
