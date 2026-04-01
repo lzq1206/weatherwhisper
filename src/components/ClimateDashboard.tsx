@@ -47,7 +47,7 @@ interface ClimateDashboardProps {
   onClose?: () => void;
 }
 
-const BASE_PATH = typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '/weatherwhisper' : '';
+const BASE_PATH = import.meta.env.BASE_URL;
 const MONTHS = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
 
 const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selectedMonth, onClose }) => {

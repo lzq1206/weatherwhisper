@@ -24,7 +24,7 @@ interface ClimateMapProps {
   selectedStationId?: string;
 }
 
-const BASE_PATH = typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '/weatherwhisper' : '';
+const BASE_PATH = import.meta.env.BASE_URL;
 const METRICS = [
   { id: 'avg_temp', label: '温度', unit: '°C', note: '年平均气温' },
   { id: 'total_precip', label: '降水', unit: 'mm', note: '年降水量' },
