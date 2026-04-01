@@ -6,6 +6,7 @@ import re
 
 RAW_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "raw")
 PROCESSED_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "processed")
+PUBLIC_DIR = os.path.join(os.path.dirname(__file__), "..", "public", "data")
 
 def parse_epw_location(first_line):
     parts = first_line.split(',')
@@ -19,6 +20,21 @@ def parse_epw_location(first_line):
         "tz": float(parts[8]),
         "elev": float(parts[9])
     }
+
+def normalize_city_name(raw_city):
+    city = str(raw_city).strip()
+    major_names = [
+        'Beijing', 'Shanghai', 'Guangzhou', 'Shenzhen', 'Tianjin', 'Wuhan',
+        'Hangzhou', 'Nanjing', 'Harbin', 'Qingdao', 'Dalian', 'Xiamen',
+        'Kunming', 'Urumqi', 'Taipei', 'Chengdu', 'Chongqing', 'Ningbo',
+        'Suzhou', 'Xian', 'Xi\'an', 'Hong Kong', 'Macau'
+    ]
+    for name in major_names:
+        if name.lower().replace("'", '') in city.lower().replace("'", ''):
+            return name
+    # Generic fallback: use the first hyphen/period segment.
+    city = re.split(r'[\.-]', city)[0].strip()
+    return city or str(raw_city).strip()
 
 def calculate_growing_season(df):
     # Standard: consecutive days with T_min > 0
@@ -141,33 +157,46 @@ def process_station(epw_path):
         },
         "properties": {
             "id": station_id,
-            "city": metadata['city'],
+            "city": normalize_city_name(metadata['city']),
             "province": metadata['state'],
             **yearly_stats
         }
     }
 
+def sync_public_outputs():
+    if not os.path.exists(PUBLIC_DIR):
+        os.makedirs(PUBLIC_DIR, exist_ok=True)
+
+    for filename in os.listdir(PROCESSED_DIR):
+        src = os.path.join(PROCESSED_DIR, filename)
+        dst = os.path.join(PUBLIC_DIR, filename)
+        if os.path.isfile(src):
+            with open(src, 'rb') as fsrc, open(dst, 'wb') as fdst:
+                fdst.write(fsrc.read())
+
 def main():
     if not os.path.exists(PROCESSED_DIR):
         os.makedirs(PROCESSED_DIR, exist_ok=True)
-        
-    epw_files = glob.glob(os.path.join(RAW_DIR, "*.epw"))
-    features = []
+
+    epw_files = sorted(glob.glob(os.path.join(RAW_DIR, "**", "*.epw"), recursive=True))
+    features_by_id = {}
     
     for epw in epw_files:
         feat = process_station(epw)
         if feat:
-            features.append(feat)
+            features_by_id[feat['properties']['id']] = feat
             
     geojson = {
         "type": "FeatureCollection",
-        "features": features
+        "features": list(features_by_id.values())
     }
     
     with open(os.path.join(PROCESSED_DIR, "stations.geojson"), 'w', encoding='utf-8') as f:
         json.dump(geojson, f, ensure_ascii=False, indent=2)
+
+    sync_public_outputs()
     
-    print(f"Finished processing {len(features)} stations.")
+    print(f"Finished processing {len(features_by_id)} stations.")
 
 if __name__ == "__main__":
     main()

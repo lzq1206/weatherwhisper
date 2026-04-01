@@ -6,136 +6,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          117.05,
-          30.53333
-        ]
-      },
-      "properties": {
-        "id": "584240",
-        "city": "Anqing",
-        "province": "Anhui",
-        "avg_temp": 17.02,
-        "total_precip": 0.0,
-        "avg_humidity": 78.02,
-        "avg_wind": 3.2,
-        "total_solar": 1172.05,
-        "avg_cloud": 7.1,
-        "growing_season": 314,
-        "best_time": "4-10月",
-        "water_temp": 18.5,
-        "solar_energy": 175.81,
-        "overview": "温带气候，四季分明。 干旱/半干旱地区。"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          116.9667,
-          30.6167
-        ]
-      },
-      "properties": {
-        "id": "584240",
-        "city": "Anqing",
-        "province": "AH",
-        "avg_temp": 17.55,
-        "total_precip": 1373.4,
-        "avg_humidity": 72.39,
-        "avg_wind": 2.7,
-        "total_solar": 1677.81,
-        "avg_cloud": 6.3,
-        "growing_season": 327,
-        "best_time": "9-9月",
-        "water_temp": 19.1,
-        "solar_energy": 251.67,
-        "overview": "温带气候，四季分明。 湿润多雨。"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          116.9673,
-          30.6231
-        ]
-      },
-      "properties": {
-        "id": "584240",
-        "city": "Anqing",
-        "province": "AH",
-        "avg_temp": 17.54,
-        "total_precip": 1538.5,
-        "avg_humidity": 74.31,
-        "avg_wind": 2.69,
-        "total_solar": 1473.55,
-        "avg_cloud": 5.7,
-        "growing_season": 325,
-        "best_time": "10-10月",
-        "water_temp": 19.0,
-        "solar_energy": 221.03,
-        "overview": "温带气候，四季分明。 降水极丰沛。"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          116.9673,
-          30.6231
-        ]
-      },
-      "properties": {
-        "id": "584240",
-        "city": "Anqing",
-        "province": "AH",
-        "avg_temp": 17.49,
-        "total_precip": 1289.9,
-        "avg_humidity": 73.88,
-        "avg_wind": 2.64,
-        "total_solar": 1425.05,
-        "avg_cloud": 5.7,
-        "growing_season": 329,
-        "best_time": "9-10月",
-        "water_temp": 19.0,
-        "solar_energy": 213.76,
-        "overview": "温带气候，四季分明。 湿润多雨。"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          116.9673,
-          30.6231
-        ]
-      },
-      "properties": {
-        "id": "584240",
-        "city": "Anqing",
-        "province": "AH",
-        "avg_temp": 17.45,
-        "total_precip": 1283.4,
-        "avg_humidity": 72.21,
-        "avg_wind": 2.65,
-        "total_solar": 1448.56,
-        "avg_cloud": 5.5,
-        "growing_season": 337,
-        "best_time": "9-10月",
-        "water_temp": 19.0,
-        "solar_energy": 217.28,
-        "overview": "温带气候，四季分明。 湿润多雨。"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           116.9673,
           30.6231
         ]
@@ -240,117 +110,13 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          115.733,
-          32.867
-        ]
-      },
-      "properties": {
-        "id": "582030",
-        "city": "Fuyang.AP",
-        "province": "AH",
-        "avg_temp": 15.95,
-        "total_precip": 766.0,
-        "avg_humidity": 72.91,
-        "avg_wind": 2.51,
-        "total_solar": 1691.71,
-        "avg_cloud": 6.0,
-        "growing_season": 303,
-        "best_time": "4-10月",
-        "water_temp": 17.5,
-        "solar_energy": 253.76,
-        "overview": "温带气候，四季分明。 半湿润地区。"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           115.7363,
           32.8776
         ]
       },
       "properties": {
         "id": "582030",
-        "city": "Fuyang.AP",
-        "province": "AH",
-        "avg_temp": 16.38,
-        "total_precip": 642.3,
-        "avg_humidity": 68.28,
-        "avg_wind": 2.47,
-        "total_solar": 1569.48,
-        "avg_cloud": 4.9,
-        "growing_season": 313,
-        "best_time": "4-10月",
-        "water_temp": 17.9,
-        "solar_energy": 235.42,
-        "overview": "温带气候，四季分明。 半湿润地区。"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          115.7363,
-          32.8776
-        ]
-      },
-      "properties": {
-        "id": "582030",
-        "city": "Fuyang.AP",
-        "province": "AH",
-        "avg_temp": 16.39,
-        "total_precip": 692.8,
-        "avg_humidity": 70.26,
-        "avg_wind": 2.5,
-        "total_solar": 1557.6,
-        "avg_cloud": 5.0,
-        "growing_season": 309,
-        "best_time": "4-10月",
-        "water_temp": 17.9,
-        "solar_energy": 233.64,
-        "overview": "温带气候，四季分明。 半湿润地区。"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          115.7363,
-          32.8776
-        ]
-      },
-      "properties": {
-        "id": "582030",
-        "city": "Fuyang.AP",
-        "province": "AH",
-        "avg_temp": 16.77,
-        "total_precip": 888.7,
-        "avg_humidity": 68.04,
-        "avg_wind": 2.54,
-        "total_solar": 1545.73,
-        "avg_cloud": 4.6,
-        "growing_season": 309,
-        "best_time": "4-10月",
-        "water_temp": 18.3,
-        "solar_energy": 231.86,
-        "overview": "温带气候，四季分明。 湿润多雨。"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          115.7363,
-          32.8776
-        ]
-      },
-      "properties": {
-        "id": "582030",
-        "city": "Fuyang.AP",
+        "city": "Fuyang",
         "province": "AH",
         "avg_temp": 15.88,
         "total_precip": 971.8,
@@ -376,7 +142,7 @@
       },
       "properties": {
         "id": "584370",
-        "city": "Huang.Shan",
+        "city": "Huang",
         "province": "AH",
         "avg_temp": 15.54,
         "total_precip": 2040.7,
@@ -389,110 +155,6 @@
         "water_temp": 17.0,
         "solar_energy": 211.07,
         "overview": "温带气候，四季分明。 降水极丰沛。"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          116.3167,
-          31.4
-        ]
-      },
-      "properties": {
-        "id": "583140",
-        "city": "Huoshan",
-        "province": "Anhui",
-        "avg_temp": 15.55,
-        "total_precip": 0.0,
-        "avg_humidity": 77.67,
-        "avg_wind": 1.42,
-        "total_solar": 1166.21,
-        "avg_cloud": 7.0,
-        "growing_season": 293,
-        "best_time": "4-10月",
-        "water_temp": 17.1,
-        "solar_energy": 174.93,
-        "overview": "温带气候，四季分明。 干旱/半干旱地区。"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          116.3333,
-          31.4
-        ]
-      },
-      "properties": {
-        "id": "583140",
-        "city": "Huoshan",
-        "province": "AH",
-        "avg_temp": 16.16,
-        "total_precip": 1236.4,
-        "avg_humidity": 75.36,
-        "avg_wind": 1.51,
-        "total_solar": 1670.18,
-        "avg_cloud": 6.7,
-        "growing_season": 313,
-        "best_time": "6-10月",
-        "water_temp": 17.7,
-        "solar_energy": 250.53,
-        "overview": "温带气候，四季分明。 湿润多雨。"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          116.337,
-          31.4009
-        ]
-      },
-      "properties": {
-        "id": "583140",
-        "city": "Huoshan",
-        "province": "AH",
-        "avg_temp": 16.24,
-        "total_precip": 1048.9,
-        "avg_humidity": 75.07,
-        "avg_wind": 1.5,
-        "total_solar": 1481.25,
-        "avg_cloud": 5.9,
-        "growing_season": 305,
-        "best_time": "5-10月",
-        "water_temp": 17.7,
-        "solar_energy": 222.19,
-        "overview": "温带气候，四季分明。 湿润多雨。"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          116.337,
-          31.4009
-        ]
-      },
-      "properties": {
-        "id": "583140",
-        "city": "Huoshan",
-        "province": "AH",
-        "avg_temp": 16.45,
-        "total_precip": 1412.6,
-        "avg_humidity": 74.77,
-        "avg_wind": 1.56,
-        "total_solar": 1449.07,
-        "avg_cloud": 5.8,
-        "growing_season": 308,
-        "best_time": "4-10月",
-        "water_temp": 17.9,
-        "solar_energy": 217.36,
-        "overview": "温带气候，四季分明。 湿润多雨。"
       }
     },
     {
@@ -532,19 +194,45 @@
       },
       "properties": {
         "id": "545110",
-        "city": "Beijing-Capital.Intl.AP",
+        "city": "Beijing",
         "province": "BJ",
-        "avg_temp": 13.22,
-        "total_precip": 628.5,
-        "avg_humidity": 53.81,
-        "avg_wind": 2.74,
-        "total_solar": 1584.33,
-        "avg_cloud": 2.2,
-        "growing_season": 253,
-        "best_time": "4-9月",
-        "water_temp": 14.7,
-        "solar_energy": 237.65,
+        "avg_temp": 12.82,
+        "total_precip": 585.5,
+        "avg_humidity": 54.56,
+        "avg_wind": 2.73,
+        "total_solar": 1569.86,
+        "avg_cloud": 3.1,
+        "growing_season": 247,
+        "best_time": "5-9月",
+        "water_temp": 14.3,
+        "solar_energy": 235.48,
         "overview": "温带气候，四季分明。 半湿润地区。"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.0798,
+          24.486
+        ]
+      },
+      "properties": {
+        "id": "591340",
+        "city": "Xiamen",
+        "province": "FJ",
+        "avg_temp": 21.41,
+        "total_precip": 1453.0,
+        "avg_humidity": 76.28,
+        "avg_wind": 3.24,
+        "total_solar": 1567.8,
+        "avg_cloud": 6.5,
+        "growing_season": 365,
+        "best_time": "3-12月",
+        "water_temp": 22.9,
+        "solar_energy": 235.17,
+        "overview": "热带/亚热带气候，全年气温较高。 湿润多雨。"
       }
     },
     {
@@ -560,17 +248,147 @@
         "id": "592870",
         "city": "Guangzhou",
         "province": "GD",
-        "avg_temp": 23.15,
-        "total_precip": 1782.4,
-        "avg_humidity": 73.97,
-        "avg_wind": 2.41,
-        "total_solar": 1459.36,
-        "avg_cloud": 6.2,
+        "avg_temp": 22.68,
+        "total_precip": 2103.5,
+        "avg_humidity": 74.53,
+        "avg_wind": 2.39,
+        "total_solar": 1433.73,
+        "avg_cloud": 6.3,
+        "growing_season": 364,
+        "best_time": "2-12月",
+        "water_temp": 24.2,
+        "solar_energy": 215.06,
+        "overview": "热带/亚热带气候，全年气温较高。 降水极丰沛。"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.0033,
+          22.5417
+        ]
+      },
+      "properties": {
+        "id": "594930",
+        "city": "Shenzhen",
+        "province": "GD",
+        "avg_temp": 23.16,
+        "total_precip": 1795.7,
+        "avg_humidity": 74.83,
+        "avg_wind": 3.09,
+        "total_solar": 1610.38,
+        "avg_cloud": 6.3,
         "growing_season": 365,
         "best_time": "2-12月",
         "water_temp": 24.7,
-        "solar_energy": 218.9,
+        "solar_energy": 241.56,
         "overview": "热带/亚热带气候，全年气温较高。 降水极丰沛。"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.0506,
+          30.5977
+        ]
+      },
+      "properties": {
+        "id": "574940",
+        "city": "Wuhan",
+        "province": "HB",
+        "avg_temp": 17.51,
+        "total_precip": 1707.6,
+        "avg_humidity": 77.34,
+        "avg_wind": 2.41,
+        "total_solar": 1459.02,
+        "avg_cloud": 5.7,
+        "growing_season": 334,
+        "best_time": "4-4月",
+        "water_temp": 19.0,
+        "solar_energy": 218.85,
+        "overview": "温带气候，四季分明。 降水极丰沛。"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.25,
+          45.623
+        ]
+      },
+      "properties": {
+        "id": "541611",
+        "city": "Harbin",
+        "province": "HL",
+        "avg_temp": 5.38,
+        "total_precip": 582.4,
+        "avg_humidity": 63.55,
+        "avg_wind": 3.72,
+        "total_solar": 1462.24,
+        "avg_cloud": 3.0,
+        "growing_season": 206,
+        "best_time": "5-9月",
+        "water_temp": 6.9,
+        "solar_energy": 219.34,
+        "overview": "寒冷气候，冬季漫长。 半湿润地区。"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.8996,
+          31.9316
+        ]
+      },
+      "properties": {
+        "id": "582380",
+        "city": "Nanjing",
+        "province": "JS",
+        "avg_temp": 16.16,
+        "total_precip": 968.0,
+        "avg_humidity": 73.1,
+        "avg_wind": 2.92,
+        "total_solar": 1493.38,
+        "avg_cloud": 4.9,
+        "growing_season": 312,
+        "best_time": "8-10月",
+        "water_temp": 17.7,
+        "solar_energy": 224.01,
+        "overview": "温带气候，四季分明。 湿润多雨。"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.66,
+          38.908
+        ]
+      },
+      "properties": {
+        "id": "546620",
+        "city": "Dalian",
+        "province": "LN",
+        "avg_temp": 11.21,
+        "total_precip": 736.9,
+        "avg_humidity": 71.36,
+        "avg_wind": 4.77,
+        "total_solar": 1624.3,
+        "avg_cloud": 4.9,
+        "growing_season": 248,
+        "best_time": "6-9月",
+        "water_temp": 12.7,
+        "solar_energy": 243.65,
+        "overview": "温带气候，四季分明。 半湿润地区。"
       }
     },
     {
@@ -584,7 +402,7 @@
       },
       "properties": {
         "id": "562940",
-        "city": "Chengdu-Shuangliu.AP",
+        "city": "Chengdu",
         "province": "SC",
         "avg_temp": 18.01,
         "total_precip": 1227.4,
@@ -604,25 +422,181 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          120.374,
+          36.266
+        ]
+      },
+      "properties": {
+        "id": "548570",
+        "city": "Qingdao",
+        "province": "SD",
+        "avg_temp": 13.19,
+        "total_precip": 679.4,
+        "avg_humidity": 69.78,
+        "avg_wind": 4.27,
+        "total_solar": 1592.21,
+        "avg_cloud": 4.5,
+        "growing_season": 268,
+        "best_time": "5-10月",
+        "water_temp": 14.7,
+        "solar_energy": 238.83,
+        "overview": "温带气候，四季分明。 半湿润地区。"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           121.4447,
           31.3908
         ]
       },
       "properties": {
         "id": "583620",
-        "city": "Shanghai-Baoshan",
+        "city": "Shanghai",
         "province": "SH",
-        "avg_temp": 17.79,
-        "total_precip": 1214.3,
-        "avg_humidity": 73.0,
-        "avg_wind": 2.57,
-        "total_solar": 1454.69,
-        "avg_cloud": 5.7,
-        "growing_season": 338,
+        "avg_temp": 17.34,
+        "total_precip": 1259.7,
+        "avg_humidity": 74.56,
+        "avg_wind": 2.98,
+        "total_solar": 1460.14,
+        "avg_cloud": 5.9,
+        "growing_season": 337,
         "best_time": "9-10月",
-        "water_temp": 19.3,
-        "solar_energy": 218.2,
+        "water_temp": 18.8,
+        "solar_energy": 219.02,
         "overview": "温带气候，四季分明。 湿润多雨。"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.346,
+          39.124
+        ]
+      },
+      "properties": {
+        "id": "545273",
+        "city": "Tianjin",
+        "province": "TJ",
+        "avg_temp": 13.47,
+        "total_precip": 530.1,
+        "avg_humidity": 58.46,
+        "avg_wind": 3.36,
+        "total_solar": 1615.67,
+        "avg_cloud": 2.7,
+        "growing_season": 263,
+        "best_time": "4-9月",
+        "water_temp": 15.0,
+        "solar_energy": 242.35,
+        "overview": "温带气候，四季分明。 半湿润地区。"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.474,
+          43.907
+        ]
+      },
+      "properties": {
+        "id": "514635",
+        "city": "Urumqi",
+        "province": "XZ",
+        "avg_temp": 8.69,
+        "total_precip": 298.3,
+        "avg_humidity": 54.7,
+        "avg_wind": 2.18,
+        "total_solar": 1658.19,
+        "avg_cloud": 3.3,
+        "growing_season": 213,
+        "best_time": "5-9月",
+        "water_temp": 10.2,
+        "solar_energy": 248.73,
+        "overview": "寒冷气候，冬季漫长。 干旱/半干旱地区。"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          102.744,
+          24.992
+        ]
+      },
+      "properties": {
+        "id": "567780",
+        "city": "Kunming",
+        "province": "YN",
+        "avg_temp": 15.42,
+        "total_precip": 1468.1,
+        "avg_humidity": 70.64,
+        "avg_wind": 2.74,
+        "total_solar": 1673.83,
+        "avg_cloud": 5.6,
+        "growing_season": 359,
+        "best_time": "4-10月",
+        "water_temp": 16.9,
+        "solar_energy": 251.08,
+        "overview": "温带气候，四季分明。 湿润多雨。"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.1649,
+          30.2259
+        ]
+      },
+      "properties": {
+        "id": "584570",
+        "city": "Hangzhou",
+        "province": "ZJ",
+        "avg_temp": 17.16,
+        "total_precip": 1259.7,
+        "avg_humidity": 75.12,
+        "avg_wind": 2.39,
+        "total_solar": 1399.53,
+        "avg_cloud": 5.8,
+        "growing_season": 327,
+        "best_time": "4-10月",
+        "water_temp": 18.7,
+        "solar_energy": 209.93,
+        "overview": "温带气候，四季分明。 湿润多雨。"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.552,
+          25.069
+        ]
+      },
+      "properties": {
+        "id": "466960",
+        "city": "Taipei",
+        "province": "NOR",
+        "avg_temp": 22.78,
+        "total_precip": 1468.8,
+        "avg_humidity": 78.91,
+        "avg_wind": 3.57,
+        "total_solar": 1470.84,
+        "avg_cloud": 6.9,
+        "growing_season": 365,
+        "best_time": "1-12月",
+        "water_temp": 24.3,
+        "solar_energy": 220.63,
+        "overview": "热带/亚热带气候，全年气温较高。 湿润多雨。"
       }
     }
   ]

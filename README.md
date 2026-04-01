@@ -9,7 +9,7 @@ WeatherWhisper is a China climate visualization site designed to feel closer to 
   - precipitation / humidity / wind trends
   - month spotlight table
   - best time to visit
-- Lets you switch between stations from China’s climate dataset
+- Lets you switch between major East Asian climate stations, including China’s key cities and Taipei
 - Keeps a map view for browsing and station selection
 - Uses a dark, glassy, information-dense layout inspired by WeatherSpark
 
@@ -33,7 +33,10 @@ The repository includes processed climate station files under `public/data/` and
 If you want to refresh or extend the data pipeline, check the scripts in `scripts/`:
 - `scripts/crawler.py`
 - `scripts/download_climate_data.py`
+- `scripts/download_major_cities.py`
 - `scripts/processor.py`
+
+The `download_major_cities.py` helper pulls the current major-city set from OneBuilding, including Taipei-Songshan.
 
 ## Notes
 - The page is static and deploys cleanly with Vite.
