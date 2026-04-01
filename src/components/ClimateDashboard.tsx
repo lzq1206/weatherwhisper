@@ -1,15 +1,27 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import * as echarts from 'echarts';
-import { X, Thermometer, Droplets, Wind, Sun, Cloud, Waves, Calendar, Sprout, Zap } from 'lucide-react';
+import {
+  X,
+  Thermometer,
+  Droplets,
+  Wind,
+  Sun,
+  Cloud,
+  Waves,
+  Calendar,
+  Sprout,
+  MapPin,
+  ArrowUpRight,
+} from 'lucide-react';
 
 interface StationData {
-  metadata: { city: string; state: string; country?: string; wmo: string };
-  yearly: { 
-    avg_temp: number; 
-    total_precip: number; 
-    avg_humidity: number; 
-    avg_wind: number; 
-    total_solar: number; 
+  metadata: { city: string; state: string; country?: string; wmo: string; lat?: number; lon?: number; elev?: number };
+  yearly: {
+    avg_temp: number;
+    total_precip: number;
+    avg_humidity: number;
+    avg_wind: number;
+    total_solar: number;
     avg_cloud: number;
     water_temp: number;
     growing_season: number;
@@ -17,9 +29,9 @@ interface StationData {
     overview: string;
     solar_energy: number;
   };
-  monthly: Record<string, { 
-    temp_avg: number; 
-    temp_max: number; 
+  monthly: Record<string, {
+    temp_avg: number;
+    temp_max: number;
     temp_min: number;
     humidity: number;
     wind: number;
@@ -31,104 +43,117 @@ interface StationData {
 
 interface ClimateDashboardProps {
   stationId: string;
-  onClose: () => void;
+  selectedMonth: number;
+  onClose?: () => void;
 }
 
-const HIGH_HUMIDITY_THRESHOLD = 75;
-const MEDIUM_HUMIDITY_THRESHOLD = 60;
-const WARM_TEMP_THRESHOLD = 22;
-const COOL_TEMP_THRESHOLD = 10;
+const BASE_PATH = typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '/weatherwhisper' : '';
+const MONTHS = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
 
-const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, onClose }) => {
+const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selectedMonth, onClose }) => {
   const [data, setData] = useState<StationData | null>(null);
-  const chartRef = useRef<HTMLDivElement>(null);
-  const monthlySorted = useMemo(
-    () =>
-      data
-        ? Object.entries(data.monthly)
-            .sort(([a], [b]) => Number(a) - Number(b))
-            .map(([, value]) => value)
-        : [],
-    [data]
-  );
+  const tempChartRef = useRef<HTMLDivElement>(null);
+  const climateChartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const baseUrl = window.location.hostname === 'localhost' ? '' : '/weatherwhisper';
-    fetch(`${baseUrl}/data/${stationId}.json`)
+    if (!stationId) return;
+    fetch(`${BASE_PATH}/data/${stationId}.json`)
       .then(res => res.json())
       .then(setData)
       .catch(err => console.error('Failed to load station data:', err));
   }, [stationId]);
 
-  useEffect(() => {
-    if (!data || !chartRef.current || monthlySorted.length === 0) return;
+  const monthlySorted = useMemo(
+    () =>
+      data
+        ? Object.entries(data.monthly)
+            .sort(([a], [b]) => Number(a) - Number(b))
+            .map(([, value], idx) => ({ month: idx + 1, ...value }))
+        : [],
+    [data]
+  );
 
-    const chart = echarts.init(chartRef.current);
-    const months = Array.from({ length: 12 }, (_, i) => `${i + 1}月`);
-    
+  const selectedIndex = Math.min(Math.max(selectedMonth, 1), 12) - 1;
+  const selected = monthlySorted[selectedIndex];
+  const hottest = monthlySorted.reduce((best, item, idx) => (item.temp_avg > monthlySorted[best].temp_avg ? idx : best), 0);
+  const coldest = monthlySorted.reduce((best, item, idx) => (item.temp_avg < monthlySorted[best].temp_avg ? idx : best), 0);
+  const wettest = monthlySorted.reduce((best, item, idx) => (item.precip > monthlySorted[best].precip ? idx : best), 0);
+  const driest = monthlySorted.reduce((best, item, idx) => (item.precip < monthlySorted[best].precip ? idx : best), 0);
+  const humidMonths = monthlySorted.filter(item => item.humidity >= 75).length;
+
+  useEffect(() => {
+    if (!data || !tempChartRef.current || monthlySorted.length !== 12) return;
+
+    const chart = echarts.init(tempChartRef.current);
     const option = {
       backgroundColor: 'transparent',
+      animationDuration: 400,
       tooltip: {
         trigger: 'axis',
-        backgroundColor: 'rgba(0,0,0,0.8)',
-        borderColor: 'rgba(255,255,255,0.1)',
-        textStyle: { color: '#fff' }
+        backgroundColor: 'rgba(2,6,23,0.92)',
+        borderColor: 'rgba(148,163,184,.18)',
+        textStyle: { color: '#fff' },
+        axisPointer: { type: 'line' },
       },
       legend: {
-        data: ['平均温度', '降水量', '湿度'],
-        textStyle: { color: 'rgba(255,255,255,0.6)' },
-        top: 0
+        data: ['平均温度', '最高温度', '最低温度'],
+        textStyle: { color: '#cbd5e1' },
+        top: 4,
       },
-      grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-      },
+      grid: { left: '3%', right: '3%', top: 48, bottom: '6%', containLabel: true },
       xAxis: {
         type: 'category',
-        data: months,
-        axisLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } },
-        axisLabel: { color: 'rgba(255,255,255,0.4)' }
+        data: MONTHS,
+        axisLine: { lineStyle: { color: 'rgba(148,163,184,.20)' } },
+        axisLabel: { color: '#94a3b8' },
       },
-      yAxis: [
-        {
-          type: 'value',
-          name: '温度 (°C)',
-          axisLine: { show: false },
-          splitLine: { lineStyle: { color: 'rgba(255,255,255,0.05)' } },
-          axisLabel: { color: 'rgba(255,255,255,0.4)' }
-        },
-        {
-          type: 'value',
-          name: '降水 (mm)',
-          axisLine: { show: false },
-          splitLine: { show: false },
-          axisLabel: { color: 'rgba(255,255,255,0.4)' }
-        }
-      ],
+      yAxis: {
+        type: 'value',
+        name: '温度 (°C)',
+        nameTextStyle: { color: '#94a3b8' },
+        splitLine: { lineStyle: { color: 'rgba(148,163,184,.10)' } },
+        axisLabel: { color: '#94a3b8' },
+      },
       series: [
         {
           name: '平均温度',
           type: 'line',
           smooth: true,
-          data: monthlySorted.map(m => m.temp_avg),
-          itemStyle: { color: '#3b82f6' },
+          data: monthlySorted.map(item => item.temp_avg),
+          symbolSize: 8,
+          lineStyle: { width: 3, color: '#38bdf8' },
+          itemStyle: { color: '#38bdf8' },
           areaStyle: {
+            opacity: 0.18,
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: 'rgba(59,130,246,0.3)' },
-              { offset: 1, color: 'rgba(59,130,246,0)' }
-            ])
-          }
+              { offset: 0, color: 'rgba(56,189,248,.45)' },
+              { offset: 1, color: 'rgba(56,189,248,0)' },
+            ]),
+          },
+          markPoint: {
+            data: [{ name: '高温', value: monthlySorted[hottest].temp_avg, xAxis: MONTHS[hottest], yAxis: monthlySorted[hottest].temp_avg }],
+            label: { color: '#e2e8f0' },
+          },
         },
         {
-          name: '降水量',
-          type: 'bar',
-          yAxisIndex: 1,
-          data: monthlySorted.map(m => m.precip),
-          itemStyle: { color: 'rgba(96,165,250,0.4)' }
-        }
-      ]
+          name: '最高温度',
+          type: 'line',
+          smooth: true,
+          data: monthlySorted.map(item => item.temp_max),
+          symbolSize: 6,
+          lineStyle: { width: 2, color: '#f97316' },
+          itemStyle: { color: '#f97316' },
+        },
+        {
+          name: '最低温度',
+          type: 'line',
+          smooth: true,
+          data: monthlySorted.map(item => item.temp_min),
+          symbolSize: 6,
+          lineStyle: { width: 2, color: '#60a5fa' },
+          itemStyle: { color: '#60a5fa' },
+        },
+      ],
     };
 
     chart.setOption(option);
@@ -138,98 +163,290 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, onClose 
       window.removeEventListener('resize', handleResize);
       chart.dispose();
     };
-  }, [data, monthlySorted]);
+  }, [data, monthlySorted, hottest]);
 
-  if (!data) return null;
+  useEffect(() => {
+    if (!data || !climateChartRef.current || monthlySorted.length !== 12) return;
 
-  const hottestIndex = monthlySorted.reduce((best, m, idx) => (m.temp_avg > monthlySorted[best].temp_avg ? idx : best), 0);
-  const coldestIndex = monthlySorted.reduce((best, m, idx) => (m.temp_avg < monthlySorted[best].temp_avg ? idx : best), 0);
-  const rainiestIndex = monthlySorted.reduce((best, m, idx) => (m.precip > monthlySorted[best].precip ? idx : best), 0);
-  const humidMonths = monthlySorted.filter(m => m.humidity >= HIGH_HUMIDITY_THRESHOLD).length;
-  const monthLabel = (idx: number) => `${idx + 1}月`;
-  const seasonalText = data.yearly.avg_temp >= WARM_TEMP_THRESHOLD ? '全年偏暖湿润' : data.yearly.avg_temp >= COOL_TEMP_THRESHOLD ? '四季分明' : '全年偏冷';
-  const humidityText = data.yearly.avg_humidity >= HIGH_HUMIDITY_THRESHOLD ? '体感偏闷' : data.yearly.avg_humidity >= MEDIUM_HUMIDITY_THRESHOLD ? '湿度适中' : '整体较干燥';
-  const weathersparkStyleSummary = `${data.metadata.city}${seasonalText}，${humidityText}；全年平均气温约${data.yearly.avg_temp}°C，通常在${Math.round(monthlySorted[coldestIndex].temp_min)}°C到${Math.round(monthlySorted[hottestIndex].temp_max)}°C之间变化。`;
-  const bestVisitText = `根据旅游舒适度（温度、云量和降水综合），推荐出行时间为${data.yearly.best_time}。`;
+    const chart = echarts.init(climateChartRef.current);
+    const option = {
+      backgroundColor: 'transparent',
+      animationDuration: 400,
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: 'rgba(2,6,23,0.92)',
+        borderColor: 'rgba(148,163,184,.18)',
+        textStyle: { color: '#fff' },
+      },
+      legend: {
+        data: ['降水量', '湿度', '风速'],
+        textStyle: { color: '#cbd5e1' },
+        top: 4,
+      },
+      grid: { left: '3%', right: '3%', top: 48, bottom: '6%', containLabel: true },
+      xAxis: {
+        type: 'category',
+        data: MONTHS,
+        axisLine: { lineStyle: { color: 'rgba(148,163,184,.20)' } },
+        axisLabel: { color: '#94a3b8' },
+      },
+      yAxis: [
+        {
+          type: 'value',
+          name: '降水 (mm)',
+          nameTextStyle: { color: '#94a3b8' },
+          splitLine: { lineStyle: { color: 'rgba(148,163,184,.10)' } },
+          axisLabel: { color: '#94a3b8' },
+        },
+        {
+          type: 'value',
+          name: '湿度 / 风速',
+          nameTextStyle: { color: '#94a3b8' },
+          splitLine: { show: false },
+          axisLabel: { color: '#94a3b8' },
+        },
+      ],
+      series: [
+        {
+          name: '降水量',
+          type: 'bar',
+          data: monthlySorted.map(item => item.precip),
+          barMaxWidth: 22,
+          itemStyle: { color: 'rgba(59,130,246,.5)', borderRadius: [8, 8, 0, 0] },
+          emphasis: { itemStyle: { color: 'rgba(59,130,246,.75)' } },
+          markLine: {
+            symbol: 'none',
+            lineStyle: { color: 'rgba(248,250,252,.35)', type: 'dashed' },
+            data: [{ xAxis: MONTHS[selectedIndex] }],
+          },
+        },
+        {
+          name: '湿度',
+          type: 'line',
+          yAxisIndex: 1,
+          smooth: true,
+          data: monthlySorted.map(item => item.humidity),
+          symbolSize: 6,
+          lineStyle: { width: 2.5, color: '#22c55e' },
+          itemStyle: { color: '#22c55e' },
+        },
+        {
+          name: '风速',
+          type: 'line',
+          yAxisIndex: 1,
+          smooth: true,
+          data: monthlySorted.map(item => item.wind),
+          symbolSize: 6,
+          lineStyle: { width: 2.5, color: '#a78bfa' },
+          itemStyle: { color: '#a78bfa' },
+        },
+      ],
+    };
+
+    chart.setOption(option);
+    const handleResize = () => chart.resize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      chart.dispose();
+    };
+  }, [data, monthlySorted, selectedIndex]);
+
+  if (!data) {
+    return (
+      <section className="rounded-[28px] border border-white/10 bg-white/6 backdrop-blur-2xl p-6 shadow-[0_24px_80px_rgba(0,0,0,.30)]">
+        <div className="text-slate-300">正在加载气候数据…</div>
+      </section>
+    );
+  }
+
+  const climateTone = data.yearly.avg_temp >= 22
+    ? '偏热'
+    : data.yearly.avg_temp >= 12
+      ? '四季分明'
+      : '偏冷';
+  const humidityTone = data.yearly.avg_humidity >= 75
+    ? '空气更湿润'
+    : data.yearly.avg_humidity >= 60
+      ? '湿度中等'
+      : '整体偏干燥';
+  const precipTone = data.yearly.total_precip >= 1200
+    ? '降水偏丰沛'
+    : data.yearly.total_precip >= 700
+      ? '降水适中'
+      : '降水偏少';
+
+  const climateSummary = `${data.metadata.city} 年平均气温约 ${data.yearly.avg_temp.toFixed(1)}°C，属于${climateTone}气候；${precipTone}，${humidityTone}。最热月份通常出现在 ${MONTHS[hottest]}，最冷月份在 ${MONTHS[coldest]}；降水峰值一般在 ${MONTHS[wettest]}，最干燥月份多见于 ${MONTHS[driest]}。`;
+  const visitSummary = `综合温度、降水和云量来看，${data.yearly.best_time} 通常更适合到访。全年约有 ${humidMonths} 个月平均湿度在 75% 以上。`;
+  const selectedSummary = selected
+    ? `${MONTHS[selectedIndex]} 的均温约 ${selected.temp_avg.toFixed(1)}°C，最高 ${selected.temp_max.toFixed(1)}°C，最低 ${selected.temp_min.toFixed(1)}°C；月降水 ${selected.precip.toFixed(1)} mm，湿度 ${selected.humidity.toFixed(1)}%，风速 ${selected.wind.toFixed(1)} m/s。`
+    : '—';
 
   const metrics = [
-    { icon: Thermometer, label: '平均气温', value: `${data.yearly.avg_temp}°C`, color: 'text-blue-400' },
-    { icon: Droplets, label: '年降水量', value: `${data.yearly.total_precip}mm`, color: 'text-cyan-400' },
-    { icon: Droplets, label: '平均湿度', value: `${data.yearly.avg_humidity}%`, color: 'text-indigo-400' },
-    { icon: Wind, label: '平均风速', value: `${data.yearly.avg_wind}m/s`, color: 'text-teal-400' },
-    { icon: Sun, label: '太阳辐射', value: `${data.yearly.total_solar} kWh/m²`, color: 'text-yellow-400' },
-    { icon: Cloud, label: '平均云量', value: `${data.yearly.avg_cloud}%`, color: 'text-gray-400' },
-    { icon: Waves, label: '水温 (估算)', value: `${data.yearly.water_temp}°C`, color: 'text-blue-500' },
-    { icon: Calendar, label: '最佳访问', value: data.yearly.best_time, color: 'text-emerald-400' },
-    { icon: Sprout, label: '生长季节', value: `${data.yearly.growing_season}天`, color: 'text-green-400' },
-    { icon: Zap, label: '太阳能潜力', value: `${data.yearly.solar_energy}kWh`, color: 'text-orange-400' }
+    { icon: Thermometer, label: '平均气温', value: `${data.yearly.avg_temp.toFixed(1)}°C`, color: 'text-sky-300' },
+    { icon: Droplets, label: '年降水量', value: `${data.yearly.total_precip.toFixed(0)} mm`, color: 'text-cyan-300' },
+    { icon: Cloud, label: '平均湿度', value: `${data.yearly.avg_humidity.toFixed(1)}%`, color: 'text-emerald-300' },
+    { icon: Wind, label: '平均风速', value: `${data.yearly.avg_wind.toFixed(2)} m/s`, color: 'text-violet-300' },
+    { icon: Sun, label: '太阳辐射', value: `${data.yearly.total_solar.toFixed(0)} kWh/m²`, color: 'text-amber-300' },
+    { icon: Waves, label: '水温', value: `${data.yearly.water_temp.toFixed(1)}°C`, color: 'text-blue-300' },
+    { icon: Sprout, label: '生长季', value: `${data.yearly.growing_season.toFixed(0)} 天`, color: 'text-lime-300' },
+    { icon: Calendar, label: '最佳访问', value: data.yearly.best_time, color: 'text-emerald-200' },
   ];
 
   return (
-    <div className="fixed inset-y-4 right-4 w-[450px] bg-black/80 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl flex flex-col z-50 overflow-hidden animate-in slide-in-from-right duration-500">
-      <div className="p-6 border-b border-white/10 flex justify-between items-start">
+    <section className="rounded-[28px] border border-white/10 bg-white/6 backdrop-blur-2xl p-6 shadow-[0_24px_80px_rgba(0,0,0,.30)]">
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-white mb-1">{data.metadata.city}</h2>
-          <p className="text-white/40 text-sm">{data.metadata.state} · WMO {data.metadata.wmo}</p>
+          <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Annual climate analysis</div>
+          <h2 className="mt-1 text-3xl font-black text-white">{data.metadata.city}</h2>
+          <p className="mt-2 text-sm text-slate-300/90">
+            {data.metadata.state} · WMO {data.metadata.wmo}
+            {data.metadata.lat != null && data.metadata.lon != null ? ` · ${data.metadata.lat.toFixed(2)}°, ${data.metadata.lon.toFixed(2)}°` : ''}
+            {data.metadata.elev != null ? ` · 海拔 ${data.metadata.elev.toFixed(0)} m` : ''}
+          </p>
         </div>
-        <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-          <X className="text-white/60" size={20} />
-        </button>
+        {onClose ? (
+          <button onClick={onClose} className="rounded-full border border-white/10 bg-white/6 p-2 text-slate-300 transition hover:bg-white/10 hover:text-white">
+            <X size={18} />
+          </button>
+        ) : null}
       </div>
 
-      <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-8">
-        <section>
-          <h3 className="text-xs font-bold text-white/30 uppercase tracking-[0.2em] mb-4">Climate Overview / 气候概况</h3>
-          <div className="bg-white/5 rounded-2xl p-4 border border-white/5">
-            <p className="text-white/80 leading-relaxed text-sm">
-              {data.yearly.overview}
-            </p>
+      <div className="mt-5 rounded-[24px] border border-white/10 bg-black/20 p-5 text-sm leading-7 text-slate-300/90">
+        <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">WeatherSpark style summary</div>
+        <p className="mt-2">{climateSummary}</p>
+        <p className="mt-2">{visitSummary}</p>
+        <p className="mt-2">{selectedSummary}</p>
+      </div>
+
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        {metrics.map(metric => (
+          <div key={metric.label} className="rounded-2xl border border-white/10 bg-black/20 p-4 shadow-inner shadow-black/10">
+            <div className="flex items-center gap-3 text-slate-300/80">
+              <metric.icon size={16} className={metric.color} />
+              <span className="text-[11px] uppercase tracking-[0.22em]">{metric.label}</span>
+            </div>
+            <div className="mt-3 text-lg font-bold text-white">{metric.value}</div>
           </div>
+        ))}
+      </div>
+
+      <div className="mt-5 grid gap-5 xl:grid-cols-2">
+        <section className="rounded-[24px] border border-white/10 bg-black/20 p-4">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div>
+              <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Temperature curve</div>
+              <h3 className="mt-1 text-lg font-bold text-white">月均高低温</h3>
+            </div>
+            <div className="text-xs text-slate-400">高亮：{MONTHS[selectedIndex]}</div>
+          </div>
+          <div ref={tempChartRef} className="h-[320px] w-full" />
         </section>
 
-        <section>
-          <h3 className="text-xs font-bold text-white/30 uppercase tracking-[0.2em] mb-4">WeatherSpark Style / 全年气候解读</h3>
-          <div className="bg-white/5 rounded-2xl p-4 border border-white/5 space-y-2 text-sm text-white/80 leading-relaxed">
-            <p>{weathersparkStyleSummary}</p>
-            <p>{bestVisitText}</p>
-            <p>{`${monthLabel(hottestIndex)}最热（均温${monthlySorted[hottestIndex].temp_avg.toFixed(1)}°C），${monthLabel(coldestIndex)}最冷（均温${monthlySorted[coldestIndex].temp_avg.toFixed(1)}°C）。`}</p>
-            <p>{`${monthLabel(rainiestIndex)}降水最多（${monthlySorted[rainiestIndex].precip.toFixed(1)} mm）；全年年降水量约${data.yearly.total_precip} mm。`}</p>
-            <p>{`全年约有${humidMonths}个月平均湿度在75%以上，年平均风速${data.yearly.avg_wind} m/s，太阳辐射总量${data.yearly.total_solar} kWh/m²。`}</p>
+        <section className="rounded-[24px] border border-white/10 bg-black/20 p-4">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div>
+              <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Precipitation & humidity</div>
+              <h3 className="mt-1 text-lg font-bold text-white">降水、湿度与风速</h3>
+            </div>
+            <div className="text-xs text-slate-400">年景节律</div>
           </div>
+          <div ref={climateChartRef} className="h-[320px] w-full" />
         </section>
+      </div>
 
-        <section>
-          <h3 className="text-xs font-bold text-white/30 uppercase tracking-[0.2em] mb-4">Key Metrics / 关键指标</h3>
-          <div className="grid grid-cols-2 gap-3">
-            {metrics.map((m, i) => (
-              <div key={i} className="bg-white/5 rounded-2xl p-4 border border-white/5 flex items-center gap-4 group hover:bg-white/10 transition-colors">
-                <div className={`p-2 rounded-xl bg-white/5 ${m.color}`}>
-                  <m.icon size={20} />
-                </div>
-                <div>
-                  <div className="text-[10px] text-white/30 uppercase font-bold">{m.label}</div>
-                  <div className="text-sm font-bold text-white">{m.value}</div>
-                </div>
+      <div className="mt-5 grid gap-5 xl:grid-cols-[1.05fr_.95fr]">
+        <section className="rounded-[24px] border border-white/10 bg-black/20 p-4">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div>
+              <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Monthly spotlight</div>
+              <h3 className="mt-1 text-lg font-bold text-white">{MONTHS[selectedIndex]} 细节</h3>
+            </div>
+            <div className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs text-cyan-200">
+              当前月份
+            </div>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            {selected ? [
+              ['均温', `${selected.temp_avg.toFixed(1)}°C`],
+              ['最高温', `${selected.temp_max.toFixed(1)}°C`],
+              ['最低温', `${selected.temp_min.toFixed(1)}°C`],
+              ['降水', `${selected.precip.toFixed(1)} mm`],
+              ['湿度', `${selected.humidity.toFixed(1)}%`],
+              ['风速', `${selected.wind.toFixed(1)} m/s`],
+            ].map(([k, v]) => (
+              <div key={k} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">{k}</div>
+                <div className="mt-2 text-xl font-bold text-white">{v}</div>
               </div>
-            ))}
+            )) : null}
           </div>
         </section>
 
-        <section>
-          <h3 className="text-xs font-bold text-white/30 uppercase tracking-[0.2em] mb-4">Annual Trend / 年度趋势</h3>
-          <div ref={chartRef} className="w-full h-64 bg-white/5 rounded-2xl border border-white/5 p-2" />
+        <section className="rounded-[24px] border border-white/10 bg-black/20 p-4">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div>
+              <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Location & visit window</div>
+              <h3 className="mt-1 text-lg font-bold text-white">位置与访问建议</h3>
+            </div>
+            <MapPin size={18} className="text-cyan-300" />
+          </div>
+          <div className="space-y-3 text-sm leading-7 text-slate-300/90">
+            <div>· 最热月份：<span className="font-semibold text-white">{MONTHS[hottest]}</span></div>
+            <div>· 最冷月份：<span className="font-semibold text-white">{MONTHS[coldest]}</span></div>
+            <div>· 降水最多：<span className="font-semibold text-white">{MONTHS[wettest]}</span></div>
+            <div>· 降水最少：<span className="font-semibold text-white">{MONTHS[driest]}</span></div>
+            <div>· 经验结论：<span className="font-semibold text-white">{data.yearly.best_time}</span></div>
+          </div>
+          <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm leading-7 text-slate-300/90">
+            {data.yearly.overview}
+            <div className="mt-2 flex items-center gap-2 text-xs text-slate-400">
+              <ArrowUpRight size={14} />
+              <span>这是静态气候摘要，适合做页面首屏结论。</span>
+            </div>
+          </div>
         </section>
       </div>
 
-      <div className="p-6 bg-gradient-to-t from-black/40 to-transparent">
-        <button 
-          className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold transition-all shadow-lg shadow-blue-600/20 active:scale-[0.98]"
-          onClick={() => window.open(`https://www.google.com/search?q=${data.metadata.city}+weather+forecast`, '_blank')}
-        >
-          查看详细气象预报
-        </button>
+      <div className="mt-5 overflow-hidden rounded-[24px] border border-white/10 bg-black/20">
+        <div className="border-b border-white/10 px-4 py-3">
+          <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Monthly table</div>
+          <div className="mt-1 text-lg font-bold text-white">全年月度概览</div>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[980px] border-collapse text-left text-sm">
+            <thead className="bg-white/5 text-slate-300">
+              <tr>
+                <th className="px-4 py-3 font-medium">月份</th>
+                <th className="px-4 py-3 font-medium">均温</th>
+                <th className="px-4 py-3 font-medium">最高</th>
+                <th className="px-4 py-3 font-medium">最低</th>
+                <th className="px-4 py-3 font-medium">降水</th>
+                <th className="px-4 py-3 font-medium">湿度</th>
+                <th className="px-4 py-3 font-medium">风速</th>
+                <th className="px-4 py-3 font-medium">云量</th>
+                <th className="px-4 py-3 font-medium">太阳辐射</th>
+              </tr>
+            </thead>
+            <tbody>
+              {monthlySorted.map((item, idx) => (
+                <tr key={item.month} className={idx === selectedIndex ? 'bg-cyan-400/10' : 'border-t border-white/5'}>
+                  <td className="px-4 py-3 text-white">{MONTHS[idx]}</td>
+                  <td className="px-4 py-3">{item.temp_avg.toFixed(1)}°C</td>
+                  <td className="px-4 py-3">{item.temp_max.toFixed(1)}°C</td>
+                  <td className="px-4 py-3">{item.temp_min.toFixed(1)}°C</td>
+                  <td className="px-4 py-3">{item.precip.toFixed(1)} mm</td>
+                  <td className="px-4 py-3">{item.humidity.toFixed(1)}%</td>
+                  <td className="px-4 py-3">{item.wind.toFixed(1)} m/s</td>
+                  <td className="px-4 py-3">{item.cloud.toFixed(1)}%</td>
+                  <td className="px-4 py-3">{item.solar.toFixed(0)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 

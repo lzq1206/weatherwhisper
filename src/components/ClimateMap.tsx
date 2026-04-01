@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import DeckGL from '@deck.gl/react';
 import { ScatterplotLayer } from '@deck.gl/layers';
 import { Map } from 'react-map-gl/maplibre';
@@ -13,6 +13,7 @@ interface StationFeature {
   properties: {
     id: string;
     city: string;
+    province?: string;
     [key: string]: any;
   };
 }
@@ -20,32 +21,39 @@ interface StationFeature {
 interface ClimateMapProps {
   onStationSelect: (stationId: string) => void;
   selectedMonth: number;
+  selectedStationId?: string;
 }
 
+const BASE_PATH = typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '/weatherwhisper' : '';
 const METRICS = [
-  { id: 'avg_temp', label: '温度', unit: '°C' },
-  { id: 'total_precip', label: '降水', unit: 'mm' },
-  { id: 'avg_humidity', label: '湿度', unit: '%' },
-  { id: 'avg_wind', label: '刮风', unit: 'm/s' },
-  { id: 'total_solar', label: '太阳', unit: 'kWh/m²' },
-  { id: 'avg_cloud', label: '云彩', unit: '%' },
-  { id: 'water_temp', label: '水温', unit: '°C' },
-  { id: 'growing_season', label: '生长季节', unit: '天' },
-  { id: 'solar_energy', label: '太阳能', unit: 'kWh' },
-  { id: 'best_time', label: '最佳访问时间', unit: '' },
-  { id: 'overview', label: '气候概述', unit: '' },
+  { id: 'avg_temp', label: '温度', unit: '°C', note: '年平均气温' },
+  { id: 'total_precip', label: '降水', unit: 'mm', note: '年降水量' },
+  { id: 'avg_humidity', label: '湿度', unit: '%', note: '年平均湿度' },
+  { id: 'avg_wind', label: '风速', unit: 'm/s', note: '年平均风速' },
+  { id: 'total_solar', label: '太阳辐射', unit: 'kWh/m²', note: '全年累计辐射' },
+  { id: 'avg_cloud', label: '云量', unit: '%', note: '年平均云量' },
+  { id: 'water_temp', label: '水温', unit: '°C', note: '估算水温' },
+  { id: 'growing_season', label: '生长季', unit: '天', note: '适宜生长天数' },
+  { id: 'solar_energy', label: '太阳能', unit: 'kWh', note: '可用太阳能潜力' },
 ];
 
-const ClimateMap: React.FC<ClimateMapProps> = ({ onStationSelect, selectedMonth }) => {
+const ClimateMap: React.FC<ClimateMapProps> = ({ onStationSelect, selectedMonth, selectedStationId }) => {
   const [data, setData] = useState<StationFeature[]>([]);
   const [metric, setMetric] = useState('avg_temp');
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
   useEffect(() => {
-    const baseUrl = window.location.hostname === 'localhost' ? '' : '/weatherwhisper';
-    fetch(`${baseUrl}/data/stations.geojson`)
+    fetch(`${BASE_PATH}/data/stations.geojson`)
       .then(res => res.json())
-      .then(json => setData(json.features))
+      .then((json: { features?: StationFeature[] }) => {
+        const unique = new globalThis.Map<string, StationFeature>();
+        (json.features || []).forEach(feature => {
+          const id = feature.properties?.id;
+          if (!id || unique.has(id)) return;
+          unique.set(id, feature);
+        });
+        setData(Array.from(unique.values()));
+      })
       .catch(err => console.error('Failed to load stations:', err));
   }, []);
 
@@ -57,15 +65,21 @@ const ClimateMap: React.FC<ClimateMapProps> = ({ onStationSelect, selectedMonth 
     return () => mq.removeEventListener('change', applyTheme);
   }, []);
 
+  const currentMetric = METRICS.find(item => item.id === metric) || METRICS[0];
+  const selectedFeature = useMemo(
+    () => data.find(item => item.properties.id === selectedStationId),
+    [data, selectedStationId]
+  );
+
   const layers = useMemo(() => [
     new InterpolationLayer({
       id: 'idw-layer',
       data,
       getPosition: (d: any) => d.geometry.coordinates,
-      getValue: (d: any) => d.properties[metric] || 0,
+      getValue: (d: any) => Number(d.properties[metric]) || 0,
       p: 2.5,
       opacity: 0.5,
-      pickable: false
+      pickable: false,
     }),
     new ScatterplotLayer({
       id: 'stations-layer',
@@ -74,51 +88,69 @@ const ClimateMap: React.FC<ClimateMapProps> = ({ onStationSelect, selectedMonth 
       radiusScale: 6,
       radiusMinPixels: 4,
       getPosition: (d: any) => d.geometry.coordinates,
-      getFillColor: [255, 255, 255, 200],
-      getLineColor: [0, 0, 0],
+      getRadius: (d: any) => (d.properties.id === selectedStationId ? 2400 : 1400),
+      getFillColor: (d: any) => (d.properties.id === selectedStationId ? [34, 211, 238, 240] : [255, 255, 255, 200]),
+      getLineColor: (d: any) => (d.properties.id === selectedStationId ? [255, 255, 255, 220] : [10, 15, 30, 180]),
       lineWidthMinPixels: 1,
       onClick: (info: any) => {
         if (info.object) {
           onStationSelect(info.object.properties.id);
         }
-      }
-    })
-  ], [data, metric, onStationSelect]);
+      },
+    }),
+  ], [data, metric, onStationSelect, selectedStationId]);
 
   const viewState = {
     longitude: 105,
     latitude: 35,
-    zoom: 3.5,
+    zoom: 3.45,
     pitch: 0,
-    bearing: 0
+    bearing: 0,
   };
 
+  const visibleStations = data.length;
+
   return (
-    <div className="relative w-full h-[600px] rounded-2xl overflow-hidden shadow-2xl border border-white/10">
-      <div className="absolute top-4 right-4 z-20 flex flex-col gap-2">
-        <div className="bg-black/80 backdrop-blur-xl p-4 rounded-2xl border border-white/20 shadow-2xl max-w-[280px]">
-          <label className="text-white/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-3 block">
-            CLIMATE METRICS / 气候指标
-          </label>
-          <div className="grid grid-cols-2 gap-2">
-            {METRICS.map(m => (
-              <button
-                key={m.id}
-                onClick={() => setMetric(m.id)}
-                className={`px-3 py-2 rounded-xl text-xs font-medium transition-all duration-300 border ${
-                  metric === m.id 
-                    ? 'bg-blue-600/90 text-white border-blue-400/50 shadow-[0_0_15px_rgba(59,130,246,0.5)] scale-[1.02]' 
-                    : 'bg-white/5 text-white/70 border-white/10 hover:bg-white/10 hover:border-white/20'
-                }`}
-              >
-                <div className="flex flex-col items-start gap-0.5">
-                  <span>{m.label}</span>
-                  <span className="text-[9px] opacity-50 font-normal">{m.unit}</span>
-                </div>
-              </button>
-            ))}
+    <section className="relative h-[760px] overflow-hidden rounded-[28px] border border-white/10 bg-white/6 shadow-[0_24px_80px_rgba(0,0,0,.30)] backdrop-blur-2xl">
+      <div className="absolute left-4 top-4 z-20 w-[min(320px,calc(100%-2rem))] rounded-[22px] border border-white/10 bg-slate-950/80 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Climate map</div>
+            <div className="mt-1 text-lg font-bold text-white">中国气候站点</div>
+          </div>
+          <div className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-2.5 py-1 text-[11px] text-cyan-200">
+            {visibleStations} stations
           </div>
         </div>
+
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          {METRICS.map(m => (
+            <button
+              key={m.id}
+              onClick={() => setMetric(m.id)}
+              className={`rounded-xl border px-3 py-2 text-left text-xs transition-all duration-300 ${
+                metric === m.id
+                  ? 'border-cyan-300/40 bg-cyan-400/15 text-white shadow-[0_0_18px_rgba(34,211,238,.22)]'
+                  : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:border-white/20'
+              }`}
+            >
+              <div className="font-semibold">{m.label}</div>
+              <div className="mt-1 text-[10px] text-slate-400">{m.unit || '—'}</div>
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-3 text-xs leading-6 text-slate-300">
+          <div className="font-semibold text-white">当前图层</div>
+          <div className="mt-1">{currentMetric.label} · {currentMetric.note}</div>
+          <div>月份高亮：{selectedMonth} 月</div>
+          {selectedFeature ? <div>选中站点：{selectedFeature.properties.city}</div> : null}
+        </div>
+      </div>
+
+      <div className="absolute bottom-4 left-4 z-20 rounded-2xl border border-white/10 bg-slate-950/75 px-4 py-3 text-xs text-slate-300 backdrop-blur-xl">
+        <div className="font-semibold text-white">点击站点切换页面主视图</div>
+        <div className="mt-1 text-slate-400">地图仅作站点浏览与局部气候分布参考。</div>
       </div>
 
       <DeckGL
@@ -127,32 +159,28 @@ const ClimateMap: React.FC<ClimateMapProps> = ({ onStationSelect, selectedMonth 
         layers={layers}
         getTooltip={({ object }: any) => {
           if (!object) return null;
-          const m = METRICS.find(item => item.id === metric);
           return {
             html: `
-              <div style="background: rgba(0,0,0,0.8); color: white; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); font-family: sans-serif;">
-                <div style="font-weight: bold; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px;">${object.properties.city}</div>
-                <div style="display: flex; justify-content: space-between; gap: 20px; align-items: center;">
-                  <span style="opacity: 0.7; font-size: 11px;">${m?.label}</span>
-                  <span style="font-weight: 500; color: #60a5fa;">${object.properties[metric]}${m?.unit}</span>
+              <div style="background: rgba(2,6,23,0.92); color: white; padding: 12px 14px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.15); font-family: sans-serif; min-width: 180px; box-shadow: 0 18px 40px rgba(0,0,0,.35);">
+                <div style="font-weight: 700; margin-bottom: 6px; font-size: 13px;">${object.properties.city}</div>
+                <div style="display: flex; justify-content: space-between; gap: 20px; align-items: center; font-size: 12px; line-height: 1.6;">
+                  <span style="opacity: 0.72;">${currentMetric.label}</span>
+                  <span style="font-weight: 600; color: #67e8f9;">${object.properties[metric]}${currentMetric.unit}</span>
                 </div>
               </div>
             `,
-            style: {
-              backgroundColor: 'transparent',
-              padding: '0px'
-            }
+            style: { backgroundColor: 'transparent', padding: '0px' },
           };
         }}
       >
         <Map
-          mapStyle={theme === 'dark' 
+          mapStyle={theme === 'dark'
             ? 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'
             : 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'
           }
         />
       </DeckGL>
-    </div>
+    </section>
   );
 };
 

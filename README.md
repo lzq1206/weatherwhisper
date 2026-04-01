@@ -1,13 +1,40 @@
-climate analysis and where to go
+# WeatherWhisper
 
-## Data collection
+WeatherWhisper is a China climate visualization site designed to feel closer to a WeatherSpark-style annual climate page.
 
-Download China region climate datasets from OneBuilding:
+## What it does
+- Presents a selected station as a full climate page with:
+  - annual summary
+  - monthly temperature curves
+  - precipitation / humidity / wind trends
+  - month spotlight table
+  - best time to visit
+- Lets you switch between stations from China’s climate dataset
+- Keeps a map view for browsing and station selection
+- Uses a dark, glassy, information-dense layout inspired by WeatherSpark
 
+## Data
+Station summaries and monthly climate files live in `public/data/`.
+
+## Local development
 ```bash
-python3 scripts/crawler.py --extract-all
+npm install
+npm run dev
 ```
 
-- 默认会抓取 `https://climate.onebuilding.org/WMO_Region_2_Asia/CHN_China/index.html` 下的全部 ZIP 链接
-- 使用 `--extract-all` 会提取 ZIP 中所有文件（如 epw/stat/wea/rain/clm/ddy 等），满足全量保存需求
-- 可用 `--limit N` 做小批量测试
+## Build
+```bash
+npm run build
+```
+
+## Source data
+The repository includes processed climate station files under `public/data/` and `data/processed/`.
+
+If you want to refresh or extend the data pipeline, check the scripts in `scripts/`:
+- `scripts/crawler.py`
+- `scripts/download_climate_data.py`
+- `scripts/processor.py`
+
+## Notes
+- The page is static and deploys cleanly with Vite.
+- The new layout emphasizes annual climate interpretation first, then monthly detail and map browsing.
