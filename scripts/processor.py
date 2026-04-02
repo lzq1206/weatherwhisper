@@ -23,6 +23,33 @@ def parse_epw_location(first_line):
 
 def normalize_city_name(raw_city):
     city = str(raw_city).strip()
+    aliases = {
+        'Peking': 'Beijing',
+        'Tientsin': 'Tianjin',
+        'Canton': 'Guangzhou',
+        'Chungking': 'Chongqing',
+        'Tsinan': 'Jinan',
+        'Mukden': 'Shenyang',
+        'Amoy': 'Xiamen',
+        'Foochow': 'Fuzhou',
+        'Soochow': 'Suzhou',
+        'Hangchow': 'Hangzhou',
+        'Nanking': 'Nanjing',
+        'Hankow': 'Wuhan',
+        'Harbin-Taiping': 'Harbin',
+        'Chengdu-Shuangliu': 'Chengdu',
+        'Chengdu-Wenjiang': 'Chengdu',
+        'Shanghai-Baoshan': 'Shanghai',
+        'Tianjin-Binhai': 'Tianjin',
+        'Guangzhou-Baiyun': 'Guangzhou',
+        'Shenzhen-Baoan': 'Shenzhen',
+        'Changsha-Huanghua': 'Changsha',
+        'Changsha-Datuopu': 'Changsha',
+        'Jinan.Tsinan': 'Jinan',
+    }
+    for old, new in aliases.items():
+        if old.lower() in city.lower():
+            return new
     major_names = [
         'Beijing', 'Shanghai', 'Guangzhou', 'Shenzhen', 'Tianjin', 'Wuhan',
         'Hangzhou', 'Nanjing', 'Harbin', 'Qingdao', 'Dalian', 'Xiamen',
