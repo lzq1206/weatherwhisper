@@ -397,7 +397,7 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
       yAxis: {
         type: 'value',
         min: 0,
-        max: 40,
+        max: 100,
         name: '晴天率（估）%',
         nameTextStyle: { color: '#94a3b8' },
         splitLine: { lineStyle: { color: 'rgba(148,163,184,.10)' } },
