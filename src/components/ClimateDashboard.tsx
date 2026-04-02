@@ -78,6 +78,7 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
   const tempChartRef = useRef<HTMLDivElement>(null);
   const climateChartRef = useRef<HTMLDivElement>(null);
   const tourismChartRef = useRef<HTMLDivElement>(null);
+  const sunshineChartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!stationId) return;
@@ -363,6 +364,69 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
     };
   }, [data, monthlySorted, bestTourismMonth]);
 
+  useEffect(() => {
+    if (!data || !sunshineChartRef.current || monthlySorted.length !== 12) return;
+
+    const chart = echarts.init(sunshineChartRef.current);
+    const option = {
+      backgroundColor: 'transparent',
+      animationDuration: 400,
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: 'rgba(2,6,23,0.92)',
+        borderColor: 'rgba(148,163,184,.18)',
+        textStyle: { color: '#fff' },
+      },
+      grid: { left: '3%', right: '3%', top: 36, bottom: '6%', containLabel: true },
+      xAxis: {
+        type: 'category',
+        data: MONTHS,
+        axisLine: { lineStyle: { color: 'rgba(148,163,184,.20)' } },
+        axisLabel: { color: '#94a3b8' },
+      },
+      yAxis: {
+        type: 'value',
+        min: 0,
+        max: 40,
+        name: '晴天率（估）%',
+        nameTextStyle: { color: '#94a3b8' },
+        splitLine: { lineStyle: { color: 'rgba(148,163,184,.10)' } },
+        axisLabel: { color: '#94a3b8' },
+      },
+      series: [
+        {
+          name: '晴天率（估）',
+          type: 'line',
+          smooth: true,
+          data: monthlySorted.map(item => item.sunny_rate ?? computeTourismScore(item).sunnyRate),
+          symbolSize: 8,
+          lineStyle: { width: 3, color: '#facc15' },
+          itemStyle: { color: '#facc15' },
+          areaStyle: {
+            opacity: 0.18,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: 'rgba(250,204,21,.30)' },
+              { offset: 1, color: 'rgba(250,204,21,0)' },
+            ]),
+          },
+          markLine: {
+            symbol: 'none',
+            lineStyle: { color: 'rgba(248,250,252,.25)', type: 'dashed' },
+            data: [{ xAxis: MONTHS[selectedIndex] }],
+          },
+        },
+      ],
+    };
+
+    chart.setOption(option);
+    const handleResize = () => chart.resize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      chart.dispose();
+    };
+  }, [data, monthlySorted, selectedIndex]);
+
   if (!data) {
     return (
       <section className="rounded-[28px] border border-white/10 bg-white/6 backdrop-blur-2xl p-6 shadow-[0_24px_80px_rgba(0,0,0,.30)]">
@@ -518,6 +582,17 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
           </div>
         </section>
       </div>
+
+      <section className="mt-5 rounded-[24px] border border-white/10 bg-black/20 p-4">
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <div>
+            <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Sunshine curve</div>
+            <h3 className="mt-1 text-lg font-bold text-white">12 个月晴天率曲线</h3>
+          </div>
+          <div className="text-xs text-slate-400">保守估算口径，便于比较月度旅游窗口</div>
+        </div>
+        <div ref={sunshineChartRef} className="h-[260px] w-full" />
+      </section>
 
       <div className="mt-5 grid gap-5 xl:grid-cols-[1.05fr_.95fr]">
         <section className="rounded-[24px] border border-white/10 bg-black/20 p-4">
