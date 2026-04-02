@@ -111,8 +111,8 @@ const ClimateMap: React.FC<ClimateMapProps> = ({ onStationSelect, selectedMonth,
   const visibleStations = data.length;
 
   return (
-    <section className="relative h-[760px] overflow-hidden rounded-[28px] border border-white/10 bg-white/6 shadow-[0_24px_80px_rgba(0,0,0,.30)] backdrop-blur-2xl">
-      <div className="absolute left-4 top-4 z-20 w-[min(320px,calc(100%-2rem))] rounded-[22px] border border-white/10 bg-slate-950/80 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
+    <section className="relative h-[520px] overflow-hidden rounded-[28px] border border-white/10 bg-white/6 shadow-[0_24px_80px_rgba(0,0,0,.30)] backdrop-blur-2xl sm:h-[620px] lg:h-[760px]">
+      <div className="absolute left-3 top-3 z-20 w-[min(280px,calc(100%-1.5rem))] rounded-[22px] border border-white/10 bg-slate-950/80 p-3 shadow-2xl shadow-black/40 backdrop-blur-xl sm:left-4 sm:top-4 sm:w-[min(320px,calc(100%-2rem))] sm:p-4">
         <div className="flex items-start justify-between gap-3">
           <div>
             <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Climate map</div>
@@ -148,7 +148,7 @@ const ClimateMap: React.FC<ClimateMapProps> = ({ onStationSelect, selectedMonth,
         </div>
       </div>
 
-      <div className="absolute bottom-4 left-4 z-20 rounded-2xl border border-white/10 bg-slate-950/75 px-4 py-3 text-xs text-slate-300 backdrop-blur-xl">
+      <div className="absolute bottom-3 left-3 z-20 rounded-2xl border border-white/10 bg-slate-950/75 px-3 py-2 text-[11px] text-slate-300 backdrop-blur-xl sm:bottom-4 sm:left-4 sm:px-4 sm:py-3 sm:text-xs">
         <div className="font-semibold text-white">点击站点切换页面主视图</div>
         <div className="mt-1 text-slate-400">地图仅作站点浏览与局部气候分布参考。</div>
       </div>
@@ -157,6 +157,7 @@ const ClimateMap: React.FC<ClimateMapProps> = ({ onStationSelect, selectedMonth,
         initialViewState={viewState}
         controller={true}
         layers={layers}
+        style={{ width: '100%', height: '100%' }}
         getTooltip={({ object }: any) => {
           if (!object) return null;
           return {
@@ -174,6 +175,7 @@ const ClimateMap: React.FC<ClimateMapProps> = ({ onStationSelect, selectedMonth,
         }}
       >
         <Map
+          style={{ width: '100%', height: '100%' }}
           mapStyle={theme === 'dark'
             ? 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'
             : 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'

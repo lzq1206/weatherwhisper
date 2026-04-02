@@ -257,42 +257,44 @@ function App() {
           </aside>
         </header>
 
-        <main className="mt-6 grid gap-6 xl:grid-cols-[1.35fr_.65fr]">
-          <div className="space-y-6">
-            <ClimateDashboard
-              stationId={selectedStationId || '583620'}
-              selectedMonth={selectedMonth}
-            />
+        <main className="mt-6 space-y-6">
+          <div className="grid gap-6 xl:grid-cols-[1.35fr_.65fr]">
+            <div className="space-y-6 min-w-0">
+              <ClimateDashboard
+                stationId={selectedStationId || '583620'}
+                selectedMonth={selectedMonth}
+              />
 
-            <section className="rounded-[28px] border border-white/10 bg-white/6 backdrop-blur-2xl p-5 shadow-[0_24px_80px_rgba(0,0,0,.30)]">
-              <div className="mb-4 flex items-center justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Monthly explorer</div>
-                  <h2 className="mt-1 text-xl font-black text-white">月份切换</h2>
+              <section className="rounded-[28px] border border-white/10 bg-white/6 backdrop-blur-2xl p-5 shadow-[0_24px_80px_rgba(0,0,0,.30)] min-w-0 overflow-hidden">
+                <div className="mb-4 flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Monthly explorer</div>
+                    <h2 className="mt-1 text-xl font-black text-white">月份切换</h2>
+                  </div>
+                  <div className="text-xs text-slate-400">当前高亮：{MONTH_LABELS[selectedMonth - 1]}</div>
                 </div>
-                <div className="text-xs text-slate-400">当前高亮：{MONTH_LABELS[selectedMonth - 1]}</div>
-              </div>
-              <TimeSlider currentMonth={selectedMonth} onChange={setSelectedMonth} />
-            </section>
+                <TimeSlider currentMonth={selectedMonth} onChange={setSelectedMonth} />
+              </section>
+            </div>
+
+            <aside className="space-y-6 min-w-0">
+              <section className="rounded-[28px] border border-white/10 bg-white/6 backdrop-blur-2xl p-5 shadow-[0_24px_80px_rgba(0,0,0,.30)] min-w-0 overflow-hidden">
+                <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Selected station</div>
+                <div className="mt-1 break-words text-xl font-black text-white">{selectedStation ? `${selectedStation.city}` : '—'}</div>
+                <div className="mt-4 space-y-3 break-words text-sm leading-7 text-slate-300/90">
+                  <div>· 这是一页静态气候图谱，适合做“先概览、后细节”的城市气候说明。</div>
+                  <div>· 如果你想进一步贴近 WeatherSpark，我可以继续补“月均高低温 + 降水排行 + 最佳访问期”专题块。</div>
+                  <div>· 当前页面已经具备站点切换、月份切换、年度曲线和地图浏览四层交互。</div>
+                </div>
+              </section>
+            </aside>
           </div>
 
-          <aside className="space-y-6">
-            <ClimateMap
-              onStationSelect={setSelectedStationId}
-              selectedMonth={selectedMonth}
-              selectedStationId={selectedStationId}
-            />
-
-            <section className="rounded-[28px] border border-white/10 bg-white/6 backdrop-blur-2xl p-5 shadow-[0_24px_80px_rgba(0,0,0,.30)]">
-              <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Selected station</div>
-              <div className="mt-1 text-xl font-black text-white">{selectedStation ? `${selectedStation.city}` : '—'}</div>
-              <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300/90">
-                <div className="min-w-0">· 这是一页静态气候图谱，适合做“先概览、后细节”的城市气候说明。</div>
-                <div className="min-w-0">· 如果你想进一步贴近 WeatherSpark，我可以继续补“月均高低温 + 降水排行 + 最佳访问期”专题块。</div>
-                <div className="min-w-0">· 当前页面已经具备站点切换、月份切换、年度曲线和地图浏览四层交互。</div>
-              </div>
-            </section>
-          </aside>
+          <ClimateMap
+            onStationSelect={setSelectedStationId}
+            selectedMonth={selectedMonth}
+            selectedStationId={selectedStationId}
+          />
         </main>
       </div>
     </div>
