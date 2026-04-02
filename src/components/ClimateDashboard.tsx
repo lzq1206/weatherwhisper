@@ -482,12 +482,12 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
   ];
 
   return (
-    <section className="rounded-[28px] border border-white/10 bg-white/6 backdrop-blur-2xl p-6 shadow-[0_24px_80px_rgba(0,0,0,.30)]">
-      <div className="flex items-start justify-between gap-4">
-        <div>
+    <section className="min-w-0 overflow-hidden rounded-[24px] border border-white/10 bg-white/6 p-4 shadow-[0_24px_80px_rgba(0,0,0,.30)] backdrop-blur-2xl sm:p-5 md:p-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+        <div className="min-w-0">
           <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Annual climate analysis</div>
-          <h2 className="mt-1 text-3xl font-black text-white">{data.metadata.city}</h2>
-          <p className="mt-2 text-sm text-slate-300/90">
+          <h2 className="mt-1 break-words text-2xl font-black text-white sm:text-3xl">{data.metadata.city}</h2>
+          <p className="mt-2 break-words text-sm text-slate-300/90">
             {data.metadata.state} · WMO {data.metadata.wmo}
             {data.metadata.lat != null && data.metadata.lon != null ? ` · ${data.metadata.lat.toFixed(2)}°, ${data.metadata.lon.toFixed(2)}°` : ''}
             {data.metadata.elev != null ? ` · 海拔 ${data.metadata.elev.toFixed(0)} m` : ''}
@@ -500,27 +500,27 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
         ) : null}
       </div>
 
-      <div className="mt-5 rounded-[24px] border border-white/10 bg-black/20 p-5 text-sm leading-7 text-slate-300/90">
+      <div className="mt-5 rounded-[24px] border border-white/10 bg-black/20 p-4 text-sm leading-7 text-slate-300/90 sm:p-5">
         <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">WeatherSpark style summary</div>
         <p className="mt-2">{climateSummary}</p>
         <p className="mt-2">{visitSummary}</p>
         <p className="mt-2">{selectedSummary}</p>
       </div>
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-5 grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {metrics.map(metric => (
-          <div key={metric.label} className="rounded-2xl border border-white/10 bg-black/20 p-4 shadow-inner shadow-black/10">
+          <div key={metric.label} className="min-w-0 rounded-2xl border border-white/10 bg-black/20 p-3 shadow-inner shadow-black/10 sm:p-4">
             <div className="flex items-center gap-3 text-slate-300/80">
               <metric.icon size={16} className={metric.color} />
-              <span className="text-[11px] uppercase tracking-[0.22em]">{metric.label}</span>
+              <span className="text-[10px] uppercase tracking-[0.18em] sm:text-[11px] sm:tracking-[0.22em]">{metric.label}</span>
             </div>
-            <div className="mt-3 text-lg font-bold text-white">{metric.value}</div>
+            <div className="mt-3 break-words text-base font-bold text-white sm:text-lg">{metric.value}</div>
           </div>
         ))}
       </div>
 
       <div className="mt-5 grid gap-5 xl:grid-cols-2">
-        <section className="rounded-[24px] border border-white/10 bg-black/20 p-4">
+        <section className="min-w-0 overflow-hidden rounded-[24px] border border-white/10 bg-black/20 p-4">
           <div className="mb-3 flex items-center justify-between gap-3">
             <div>
               <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Temperature curve</div>
@@ -528,10 +528,10 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
             </div>
             <div className="text-xs text-slate-400">高亮：{MONTHS[selectedIndex]}</div>
           </div>
-          <div ref={tempChartRef} className="h-[320px] w-full" />
+          <div ref={tempChartRef} className="h-[230px] w-full sm:h-[280px] md:h-[320px]" />
         </section>
 
-        <section className="rounded-[24px] border border-white/10 bg-black/20 p-4">
+        <section className="min-w-0 overflow-hidden rounded-[24px] border border-white/10 bg-black/20 p-4">
           <div className="mb-3 flex items-center justify-between gap-3">
             <div>
               <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Precipitation & humidity</div>
@@ -539,12 +539,12 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
             </div>
             <div className="text-xs text-slate-400">年景节律</div>
           </div>
-          <div ref={climateChartRef} className="h-[320px] w-full" />
+          <div ref={climateChartRef} className="h-[230px] w-full sm:h-[280px] md:h-[320px]" />
         </section>
       </div>
 
       <div className="mt-5 grid gap-5 xl:grid-cols-[1.05fr_.95fr]">
-        <section className="rounded-[24px] border border-white/10 bg-black/20 p-4">
+        <section className="min-w-0 overflow-hidden rounded-[24px] border border-white/10 bg-black/20 p-4">
           <div className="mb-3 flex items-center justify-between gap-3">
             <div>
               <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Travel score</div>
@@ -554,13 +554,13 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
               结合温度 / 湿度 / 晴天率
             </div>
           </div>
-          <div ref={tourismChartRef} className="h-[280px] w-full" />
+          <div ref={tourismChartRef} className="h-[220px] w-full sm:h-[250px] md:h-[280px]" />
           <div className="mt-3 text-xs leading-6 text-slate-400">
             旅游评分由舒适温度、可接受湿度和更高晴天率共同决定；晴天率为保守估算，不等同于 100% - 云量。
           </div>
         </section>
 
-        <section className="rounded-[24px] border border-white/10 bg-black/20 p-4">
+        <section className="min-w-0 overflow-hidden rounded-[24px] border border-white/10 bg-black/20 p-4">
           <div className="mb-3 flex items-center justify-between gap-3">
             <div>
               <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Cloudiness & sunshine</div>
@@ -572,38 +572,38 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">最晴朗月份</div>
               <div className="mt-2 text-xl font-bold text-white">{MONTHS[clearest]}</div>
-              <div className="mt-1 text-sm text-slate-300">总云量约 {monthlySorted[clearest].cloud.toFixed(1)}%，遮蔽云量约 {(monthlySorted[clearest].opaque_cloud ?? monthlySorted[clearest].cloud).toFixed(1)}%</div>
+              <div className="mt-1 break-words text-sm text-slate-300">总云量约 {monthlySorted[clearest].cloud.toFixed(1)}%，遮蔽云量约 {(monthlySorted[clearest].opaque_cloud ?? monthlySorted[clearest].cloud).toFixed(1)}%</div>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">最阴云月份</div>
               <div className="mt-2 text-xl font-bold text-white">{MONTHS[cloudiest]}</div>
-              <div className="mt-1 text-sm text-slate-300">总云量约 {monthlySorted[cloudiest].cloud.toFixed(1)}%，遮蔽云量约 {(monthlySorted[cloudiest].opaque_cloud ?? monthlySorted[cloudiest].cloud).toFixed(1)}%</div>
+              <div className="mt-1 break-words text-sm text-slate-300">总云量约 {monthlySorted[cloudiest].cloud.toFixed(1)}%，遮蔽云量约 {(monthlySorted[cloudiest].opaque_cloud ?? monthlySorted[cloudiest].cloud).toFixed(1)}%</div>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">全年平均云量</div>
               <div className="mt-2 text-xl font-bold text-white">{data.yearly.avg_cloud.toFixed(1)}%</div>
-              <div className="mt-1 text-sm text-slate-300">对应晴天率约 {monthlySorted.length ? (monthlySorted.reduce((sum, item) => sum + (item.sunny_rate ?? computeTourismScore(item).sunnyRate), 0) / monthlySorted.length).toFixed(1) : '—'}%（保守估算）</div>
+              <div className="mt-1 break-words text-sm text-slate-300">对应晴天率约 {monthlySorted.length ? (monthlySorted.reduce((sum, item) => sum + (item.sunny_rate ?? computeTourismScore(item).sunnyRate), 0) / monthlySorted.length).toFixed(1) : '—'}%（保守估算）</div>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">最佳旅游月</div>
               <div className="mt-2 text-xl font-bold text-white">{MONTHS[bestTourismMonth]}</div>
-              <div className="mt-1 text-sm text-slate-300">评分 {monthlySorted[bestTourismMonth].tourism_score.toFixed(1)} / 10</div>
+              <div className="mt-1 break-words text-sm text-slate-300">评分 {monthlySorted[bestTourismMonth].tourism_score.toFixed(1)} / 10</div>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">平均遮蔽云量</div>
               <div className="mt-2 text-xl font-bold text-white">{data.yearly.avg_opaque_cloud?.toFixed(1) ?? '—'}%</div>
-              <div className="mt-1 text-sm text-slate-300">更接近能见度和体感晴朗程度</div>
+              <div className="mt-1 break-words text-sm text-slate-300">更接近能见度和体感晴朗程度</div>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">平均能见度</div>
               <div className="mt-2 text-xl font-bold text-white">{data.yearly.avg_visibility?.toFixed(1) ?? '—'} km</div>
-              <div className="mt-1 text-sm text-slate-300">能见度高通常更有利于旅游与观景</div>
+              <div className="mt-1 break-words text-sm text-slate-300">能见度高通常更有利于旅游与观景</div>
             </div>
           </div>
         </section>
       </div>
 
-      <section className="mt-5 rounded-[24px] border border-white/10 bg-black/20 p-4">
+      <section className="mt-5 min-w-0 overflow-hidden rounded-[24px] border border-white/10 bg-black/20 p-4">
         <div className="mb-3 flex items-center justify-between gap-3">
           <div>
             <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Sunshine curve</div>
@@ -611,11 +611,11 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
           </div>
           <div className="text-xs text-slate-400">保守估算口径，便于比较月度旅游窗口</div>
         </div>
-        <div ref={sunshineChartRef} className="h-[260px] w-full" />
+        <div ref={sunshineChartRef} className="h-[220px] w-full sm:h-[240px] md:h-[260px]" />
       </section>
 
       <div className="mt-5 grid gap-5 xl:grid-cols-[1.05fr_.95fr]">
-        <section className="rounded-[24px] border border-white/10 bg-black/20 p-4">
+        <section className="min-w-0 overflow-hidden rounded-[24px] border border-white/10 bg-black/20 p-4">
           <div className="mb-3 flex items-center justify-between gap-3">
             <div>
               <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Monthly spotlight</div>
@@ -625,7 +625,7 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
               当前月份
             </div>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {selected ? [
               ['均温', `${selected.temp_avg.toFixed(1)}°C`],
               ['最高温', `${selected.temp_max.toFixed(1)}°C`],
@@ -638,15 +638,15 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
               ['风速', `${selected.wind.toFixed(1)} m/s`],
               ['舒适度', selected.comfort_label || '—'],
             ].map(([k, v]) => (
-              <div key={k} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div key={k} className="min-w-0 rounded-2xl border border-white/10 bg-white/5 p-3 sm:p-4">
                 <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">{k}</div>
-                <div className="mt-2 text-xl font-bold text-white">{v}</div>
+                <div className="mt-2 break-words text-lg font-bold text-white sm:text-xl">{v}</div>
               </div>
             )) : null}
           </div>
         </section>
 
-        <section className="rounded-[24px] border border-white/10 bg-black/20 p-4">
+        <section className="min-w-0 overflow-hidden rounded-[24px] border border-white/10 bg-black/20 p-4">
           <div className="mb-3 flex items-center justify-between gap-3">
             <div>
               <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Location & visit window</div>
@@ -654,7 +654,7 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
             </div>
             <MapPin size={18} className="text-cyan-300" />
           </div>
-          <div className="space-y-3 text-sm leading-7 text-slate-300/90">
+          <div className="space-y-3 break-words text-sm leading-7 text-slate-300/90">
             <div>· 最热月份：<span className="font-semibold text-white">{MONTHS[hottest]}</span></div>
             <div>· 最冷月份：<span className="font-semibold text-white">{MONTHS[coldest]}</span></div>
             <div>· 降水最多：<span className="font-semibold text-white">{MONTHS[wettest]}</span></div>
@@ -673,7 +673,7 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
         </section>
       </div>
 
-      <div className="mt-5 overflow-hidden rounded-[24px] border border-white/10 bg-black/20">
+      <div className="mt-5 min-w-0 overflow-hidden rounded-[24px] border border-white/10 bg-black/20">
         <div className="border-b border-white/10 px-4 py-3">
           <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Monthly table</div>
           <div className="mt-1 text-lg font-bold text-white">全年月度概览</div>

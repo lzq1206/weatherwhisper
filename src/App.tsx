@@ -129,27 +129,27 @@ function App() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,.18),transparent_35%),radial-gradient(circle_at_85%_15%,rgba(168,85,247,.16),transparent_28%),linear-gradient(180deg,#020617_0%,#07111f_50%,#020617_100%)]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-cyan-400/10 to-transparent blur-3xl" />
 
-      <div className="relative mx-auto max-w-[1600px] px-4 py-5 md:px-6 lg:px-8 lg:py-6">
-        <header className="grid gap-5 xl:grid-cols-[1.25fr_.75fr]">
-          <section className="rounded-[28px] border border-white/10 bg-white/6 backdrop-blur-2xl shadow-[0_24px_80px_rgba(0,0,0,.35)] p-6 md:p-7">
+      <div className="relative mx-auto w-full max-w-[1600px] px-3 py-4 sm:px-4 md:px-6 lg:px-8 lg:py-6">
+        <header className="grid min-w-0 gap-5 xl:grid-cols-[1.25fr_.75fr]">
+          <section className="min-w-0 overflow-hidden rounded-[24px] border border-white/10 bg-white/6 p-4 shadow-[0_24px_80px_rgba(0,0,0,.35)] backdrop-blur-2xl sm:p-5 md:p-7">
             <div className="flex flex-wrap items-center gap-3 text-[11px] uppercase tracking-[0.28em] text-cyan-200/80">
               <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1">WeatherWhisper</span>
               <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">WeatherSpark-style climate page</span>
               <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">China station atlas</span>
             </div>
 
-            <div className="mt-5 grid gap-6 xl:grid-cols-[1.15fr_.85fr] xl:items-end">
-              <div>
-                <h1 className="text-4xl md:text-5xl font-black leading-[1.02] tracking-tight text-white drop-shadow-[0_12px_30px_rgba(0,0,0,.45)]">
+            <div className="mt-5 grid min-w-0 gap-6 xl:grid-cols-[1.15fr_.85fr] xl:items-end">
+              <div className="min-w-0">
+                <h1 className="break-words text-3xl font-black leading-[1.08] tracking-tight text-white drop-shadow-[0_12px_30px_rgba(0,0,0,.45)] sm:text-4xl md:text-5xl">
                   {heroTitle}
                 </h1>
-                <p className="mt-4 max-w-3xl text-sm md:text-base leading-8 text-slate-300/90">
+                <p className="mt-4 max-w-none text-sm leading-7 text-slate-300/90 sm:leading-8 md:text-base">
                   {heroSubtitle}
                 </p>
 
                 <div className="mt-5 flex flex-wrap gap-2.5">
                   {heroChips.map(chip => (
-                    <span key={chip} className="rounded-full border border-white/10 bg-white/6 px-3 py-1.5 text-xs text-slate-200/90">
+                    <span key={chip} className="max-w-full break-words rounded-full border border-white/10 bg-white/6 px-3 py-1.5 text-xs text-slate-200/90">
                       {chip}
                     </span>
                   ))}
@@ -157,22 +157,22 @@ function App() {
 
                 <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                   {quickMetrics.map(item => (
-                    <div key={item.label} className="rounded-2xl border border-white/10 bg-black/20 p-4 shadow-inner shadow-black/10">
+                    <div key={item.label} className="min-w-0 rounded-2xl border border-white/10 bg-black/20 p-3 shadow-inner shadow-black/10 sm:p-4">
                       <div className="flex items-center gap-3 text-slate-300/80">
                         <item.icon size={16} className="text-cyan-300" />
-                        <span className="text-[11px] uppercase tracking-[0.24em]">{item.label}</span>
+                        <span className="text-[10px] uppercase tracking-[0.18em] sm:text-[11px] sm:tracking-[0.24em]">{item.label}</span>
                       </div>
-                      <div className="mt-3 text-lg font-bold text-white">{item.value}</div>
+                      <div className="mt-3 break-words text-base font-bold text-white sm:text-lg">{item.value}</div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="rounded-[24px] border border-white/10 bg-black/20 p-5 shadow-2xl shadow-black/20">
+              <div className="min-w-0 overflow-hidden rounded-[24px] border border-white/10 bg-black/20 p-4 shadow-2xl shadow-black/20 sm:p-5">
                 <div className="flex items-center justify-between gap-4">
-                  <div>
+                  <div className="min-w-0">
                     <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Station switcher</div>
-                    <div className="mt-1 text-lg font-bold text-white">选择一个站点</div>
+                    <div className="mt-1 break-words text-base font-bold text-white sm:text-lg">选择一个站点</div>
                   </div>
                   <CalendarDays className="text-cyan-300" size={18} />
                 </div>
@@ -215,28 +215,28 @@ function App() {
             </div>
           </section>
 
-          <aside className="grid gap-5">
-            <section className="rounded-[28px] border border-white/10 bg-white/6 backdrop-blur-2xl p-6 shadow-[0_24px_80px_rgba(0,0,0,.35)]">
+          <aside className="grid min-w-0 gap-5">
+            <section className="min-w-0 overflow-hidden rounded-[28px] border border-white/10 bg-white/6 p-4 shadow-[0_24px_80px_rgba(0,0,0,.35)] backdrop-blur-2xl sm:p-6">
               <div className="flex items-center justify-between gap-3">
-                <div>
+                <div className="min-w-0">
                   <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Fast facts</div>
-                  <h2 className="mt-1 text-2xl font-black text-white">年度气候快照</h2>
+                  <h2 className="mt-1 break-words text-xl font-black text-white sm:text-2xl">年度气候快照</h2>
                 </div>
                 <div className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs text-emerald-200">
                   选择即联动
                 </div>
               </div>
 
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <div className="mt-5 grid min-w-0 gap-3 sm:grid-cols-2">
                 {selectedStation ? [
                   ['城市', selectedStation.city],
                   ['省份', selectedStation.province || '—'],
                   ['WMO', selectedStation.id],
                   ['最佳时段', selectedStation.best_time || '—'],
                 ].map(([k, v]) => (
-                  <div key={k} className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                  <div key={k} className="min-w-0 rounded-2xl border border-white/10 bg-black/20 p-3 sm:p-4">
                     <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">{k}</div>
-                    <div className="mt-2 text-sm font-semibold text-white">{v}</div>
+                    <div className="mt-2 break-words text-sm font-semibold text-white">{v}</div>
                   </div>
                 )) : (
                   <div className="rounded-2xl border border-white/10 bg-black/20 p-4 text-sm text-slate-300">
@@ -266,7 +266,7 @@ function App() {
 
             <section className="rounded-[28px] border border-white/10 bg-white/6 backdrop-blur-2xl p-5 shadow-[0_24px_80px_rgba(0,0,0,.30)]">
               <div className="mb-4 flex items-center justify-between gap-3">
-                <div>
+                <div className="min-w-0">
                   <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Monthly explorer</div>
                   <h2 className="mt-1 text-xl font-black text-white">月份切换</h2>
                 </div>
@@ -287,9 +287,9 @@ function App() {
               <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Selected station</div>
               <div className="mt-1 text-xl font-black text-white">{selectedStation ? `${selectedStation.city}` : '—'}</div>
               <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300/90">
-                <div>· 这是一页静态气候图谱，适合做“先概览、后细节”的城市气候说明。</div>
-                <div>· 如果你想进一步贴近 WeatherSpark，我可以继续补“月均高低温 + 降水排行 + 最佳访问期”专题块。</div>
-                <div>· 当前页面已经具备站点切换、月份切换、年度曲线和地图浏览四层交互。</div>
+                <div className="min-w-0">· 这是一页静态气候图谱，适合做“先概览、后细节”的城市气候说明。</div>
+                <div className="min-w-0">· 如果你想进一步贴近 WeatherSpark，我可以继续补“月均高低温 + 降水排行 + 最佳访问期”专题块。</div>
+                <div className="min-w-0">· 当前页面已经具备站点切换、月份切换、年度曲线和地图浏览四层交互。</div>
               </div>
             </section>
           </aside>
