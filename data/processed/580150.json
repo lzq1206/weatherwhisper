@@ -21,7 +21,7 @@
     "growing_season": 283,
     "water_temp": 16.2,
     "solar_energy": 234.39,
-    "tourism_score_avg": 4.9,
+    "tourism_score_avg": 4.7,
     "best_tourism_months": "5-6月",
     "best_time": "5-6月",
     "tourism_peak_month": 5,
@@ -39,8 +39,9 @@
       "cloud": 4.643817204301075,
       "opaque_cloud": 4.643817204301075,
       "visibility": 8456.15685483871,
-      "sunny_rate": 46.7,
-      "tourism_score": 3.4,
+      "sunny_index": 5.4,
+      "sunny_rate": 54.0,
+      "tourism_score": 3.6,
       "comfort_label": "偏不舒适"
     },
     "2": {
@@ -54,8 +55,9 @@
       "cloud": 4.3913690476190474,
       "opaque_cloud": 5.336309523809524,
       "visibility": 8748.30505952381,
-      "sunny_rate": 46.6,
-      "tourism_score": 3.2,
+      "sunny_index": 4.7,
+      "sunny_rate": 47.0,
+      "tourism_score": 3.3,
       "comfort_label": "偏不舒适"
     },
     "3": {
@@ -69,8 +71,9 @@
       "cloud": 4.719086021505376,
       "opaque_cloud": 4.719086021505376,
       "visibility": 7558.413978494624,
-      "sunny_rate": 46.7,
-      "tourism_score": 3.5,
+      "sunny_index": 5.3,
+      "sunny_rate": 53.0,
+      "tourism_score": 3.7,
       "comfort_label": "偏不舒适"
     },
     "4": {
@@ -84,8 +87,9 @@
       "cloud": 4.365277777777778,
       "opaque_cloud": 5.551388888888889,
       "visibility": 8200.047222222222,
-      "sunny_rate": 46.6,
-      "tourism_score": 4.9,
+      "sunny_index": 4.4,
+      "sunny_rate": 44.0,
+      "tourism_score": 4.8,
       "comfort_label": "可接受"
     },
     "5": {
@@ -99,8 +103,9 @@
       "cloud": 3.810483870967742,
       "opaque_cloud": 4.477150537634409,
       "visibility": 777.7,
-      "sunny_rate": 46.8,
-      "tourism_score": 7.4,
+      "sunny_index": 5.5,
+      "sunny_rate": 55.0,
+      "tourism_score": 7.6,
       "comfort_label": "舒适"
     },
     "6": {
@@ -114,8 +119,9 @@
       "cloud": 5.126388888888889,
       "opaque_cloud": 5.708333333333333,
       "visibility": 8441.15,
-      "sunny_rate": 46.5,
-      "tourism_score": 6.8,
+      "sunny_index": 4.3,
+      "sunny_rate": 43.0,
+      "tourism_score": 6.7,
       "comfort_label": "舒适"
     },
     "7": {
@@ -129,8 +135,9 @@
       "cloud": 7.643817204301075,
       "opaque_cloud": 7.860215053763441,
       "visibility": 8332.512096774193,
-      "sunny_rate": 45.8,
-      "tourism_score": 5.5,
+      "sunny_index": 2.1,
+      "sunny_rate": 21.0,
+      "tourism_score": 4.7,
       "comfort_label": "偏不舒适"
     },
     "8": {
@@ -144,8 +151,9 @@
       "cloud": 7.423387096774194,
       "opaque_cloud": 7.423387096774194,
       "visibility": 8500.995967741936,
-      "sunny_rate": 45.9,
-      "tourism_score": 5.7,
+      "sunny_index": 2.6,
+      "sunny_rate": 26.0,
+      "tourism_score": 5.1,
       "comfort_label": "偏不舒适"
     },
     "9": {
@@ -159,8 +167,9 @@
       "cloud": 5.416666666666667,
       "opaque_cloud": 6.844444444444444,
       "visibility": 777.7,
-      "sunny_rate": 46.3,
-      "tourism_score": 6.6,
+      "sunny_index": 3.2,
+      "sunny_rate": 32.0,
+      "tourism_score": 6.2,
       "comfort_label": "可接受"
     },
     "10": {
@@ -174,8 +183,9 @@
       "cloud": 4.868279569892473,
       "opaque_cloud": 6.115591397849462,
       "visibility": 8039.956989247312,
-      "sunny_rate": 46.4,
-      "tourism_score": 5.1,
+      "sunny_index": 3.9,
+      "sunny_rate": 39.0,
+      "tourism_score": 4.8,
       "comfort_label": "可接受"
     },
     "11": {
@@ -189,8 +199,9 @@
       "cloud": 6.341666666666667,
       "opaque_cloud": 6.341666666666667,
       "visibility": 7186.677777777778,
-      "sunny_rate": 46.2,
-      "tourism_score": 2.8,
+      "sunny_index": 3.7,
+      "sunny_rate": 37.0,
+      "tourism_score": 2.5,
       "comfort_label": "偏不舒适"
     },
     "12": {
@@ -204,8 +215,9 @@
       "cloud": 2.678763440860215,
       "opaque_cloud": 4.580645161290323,
       "visibility": 6242.685483870968,
-      "sunny_rate": 47.0,
-      "tourism_score": 3.5,
+      "sunny_index": 5.4,
+      "sunny_rate": 54.0,
+      "tourism_score": 3.8,
       "comfort_label": "偏不舒适"
     }
   }

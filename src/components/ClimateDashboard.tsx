@@ -45,6 +45,7 @@ interface StationData {
     cloud: number;
     opaque_cloud?: number;
     visibility?: number;
+    sunny_index?: number;
     sunny_rate?: number;
     tourism_score?: number;
     comfort_label?: string;
@@ -65,20 +66,18 @@ function computeTourismScore(item: { temp_avg: number; humidity: number; cloud: 
   const humidity = Number(item.humidity);
   const cloud = Number(item.cloud);
   const opaqueCloud = Number((item as any).opaque_cloud ?? cloud);
-  const visibility = Number((item as any).visibility ?? 10);
-  const cloudiness = 0.45 * cloud + 0.55 * opaqueCloud;
-  const visibilityBonus = Math.max(0, Math.min(8, (visibility - 5) / 1.5));
-  const sunnyRate = Math.max(0, Math.min(100, (100 - cloudiness) * 0.28 + visibilityBonus * 2.5));
+  const sunnyIndex = Math.max(0, 10 - opaqueCloud);
+  const sunnyRate = Math.max(0, sunnyIndex * 10);
   const tempScore = Math.max(0, 1 - Math.abs(temp - 23) / 13);
   const humidityScore = Math.max(0, 1 - Math.abs(humidity - 55) / 45);
-  const sunnyScore = sunnyRate / 100;
+  const sunnyScore = sunnyIndex / 10;
   const score = Math.round((0.45 * tempScore + 0.25 * humidityScore + 0.30 * sunnyScore) * 10 * 10) / 10;
   const comfortLabel = temp >= 18 && temp <= 28 && humidity >= 35 && humidity <= 75 && sunnyRate >= 18
     ? '舒适'
     : temp >= 15 && temp <= 30 && humidity >= 30 && humidity <= 80
       ? '可接受'
       : '偏不舒适';
-  return { sunnyRate: Math.round(sunnyRate * 10) / 10, score, comfortLabel };
+  return { sunnyIndex: Math.round(sunnyIndex * 10) / 10, sunnyRate: Math.round(sunnyRate * 10) / 10, score, comfortLabel };
 }
 
 const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selectedMonth, onClose }) => {
@@ -107,6 +106,7 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
                 month: idx + 1,
                 opaque_cloud: value.opaque_cloud,
                 visibility: value.visibility,
+                sunny_index: value.sunny_index,
                 sunny_rate: value.sunny_rate ?? computed.sunnyRate,
                 tourism_score: value.tourism_score ?? computed.score,
                 comfort_label: value.comfort_label ?? computed.comfortLabel,

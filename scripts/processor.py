@@ -99,11 +99,8 @@ def score_tourism_month(month_stats):
     humidity = float(month_stats['humidity'])
     cloud = float(month_stats['cloud'])
     opaque_cloud = float(month_stats.get('opaque_cloud', cloud))
-    visibility = float(month_stats.get('visibility', 10.0))
-
-    cloudiness = 0.45 * cloud + 0.55 * opaque_cloud
-    visibility_bonus = max(0.0, min(8.0, (visibility - 5.0) / 1.5))
-    sunny_rate = round(max(0.0, min(100.0, (100.0 - cloudiness) * 0.28 + visibility_bonus * 2.5)), 1)
+    sunny_rate_index = round(max(0.0, 10.0 - opaque_cloud), 1)
+    sunny_rate = round(max(0.0, sunny_rate_index * 10.0), 1)
 
     # Rough comfort model: temperature near 23°C, humidity near 55%, more sunshine is better.
     temp_score = max(0.0, 1.0 - abs(temp - 23.0) / 13.0)
@@ -119,6 +116,7 @@ def score_tourism_month(month_stats):
         comfort_label = '偏不舒适'
 
     return {
+        'sunny_index': sunny_rate_index,
         'sunny_rate': sunny_rate,
         'tourism_score': tourism_score,
         'comfort_label': comfort_label,
