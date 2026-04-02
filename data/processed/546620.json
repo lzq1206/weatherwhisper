@@ -19,7 +19,7 @@
     "growing_season": 248,
     "water_temp": 12.7,
     "solar_energy": 243.65,
-    "tourism_score_avg": 6.0,
+    "tourism_score_avg": 4.1,
     "best_tourism_months": "9月",
     "best_time": "9月",
     "tourism_peak_month": 9,
@@ -35,8 +35,8 @@
       "precip": 1.7000000000000002,
       "solar": 81558.0,
       "cloud": 3.5295698924731185,
-      "sunny_rate": 96.5,
-      "tourism_score": 4.9,
+      "sunny_rate": 33.8,
+      "tourism_score": 3.1,
       "comfort_label": "偏不舒适"
     },
     "2": {
@@ -48,8 +48,8 @@
       "precip": 41.4,
       "solar": 101073.0,
       "cloud": 3.575892857142857,
-      "sunny_rate": 96.4,
-      "tourism_score": 4.8,
+      "sunny_rate": 33.7,
+      "tourism_score": 2.9,
       "comfort_label": "偏不舒适"
     },
     "3": {
@@ -61,8 +61,8 @@
       "precip": 3.7,
       "solar": 149248.0,
       "cloud": 4.815860215053763,
-      "sunny_rate": 95.2,
-      "tourism_score": 4.7,
+      "sunny_rate": 33.3,
+      "tourism_score": 2.8,
       "comfort_label": "偏不舒适"
     },
     "4": {
@@ -74,8 +74,8 @@
       "precip": 38.7,
       "solar": 176876.0,
       "cloud": 3.7958333333333334,
-      "sunny_rate": 96.2,
-      "tourism_score": 4.6,
+      "sunny_rate": 33.7,
+      "tourism_score": 2.7,
       "comfort_label": "偏不舒适"
     },
     "5": {
@@ -87,8 +87,8 @@
       "precip": 35.2,
       "solar": 194784.0,
       "cloud": 4.801075268817204,
-      "sunny_rate": 95.2,
-      "tourism_score": 5.8,
+      "sunny_rate": 33.3,
+      "tourism_score": 4.0,
       "comfort_label": "偏不舒适"
     },
     "6": {
@@ -100,8 +100,8 @@
       "precip": 90.2,
       "solar": 189043.0,
       "cloud": 6.065277777777778,
-      "sunny_rate": 93.9,
-      "tourism_score": 7.3,
+      "sunny_rate": 32.9,
+      "tourism_score": 5.5,
       "comfort_label": "偏不舒适"
     },
     "7": {
@@ -113,8 +113,8 @@
       "precip": 281.3,
       "solar": 170768.0,
       "cloud": 7.658602150537634,
-      "sunny_rate": 92.3,
-      "tourism_score": 7.6,
+      "sunny_rate": 32.3,
+      "tourism_score": 5.8,
       "comfort_label": "偏不舒适"
     },
     "8": {
@@ -126,8 +126,8 @@
       "precip": 153.3,
       "solar": 157314.0,
       "cloud": 6.294354838709677,
-      "sunny_rate": 93.7,
-      "tourism_score": 7.9,
+      "sunny_rate": 32.8,
+      "tourism_score": 6.0,
       "comfort_label": "可接受"
     },
     "9": {
@@ -139,8 +139,8 @@
       "precip": 14.4,
       "solar": 147079.0,
       "cloud": 4.4847222222222225,
-      "sunny_rate": 95.5,
-      "tourism_score": 8.2,
+      "sunny_rate": 33.4,
+      "tourism_score": 6.4,
       "comfort_label": "舒适"
     },
     "10": {
@@ -152,8 +152,8 @@
       "precip": 50.6,
       "solar": 115227.0,
       "cloud": 4.471774193548387,
-      "sunny_rate": 95.5,
-      "tourism_score": 6.5,
+      "sunny_rate": 33.4,
+      "tourism_score": 4.6,
       "comfort_label": "偏不舒适"
     },
     "11": {
@@ -165,8 +165,8 @@
       "precip": 18.5,
       "solar": 75632.0,
       "cloud": 4.565277777777778,
-      "sunny_rate": 95.4,
-      "tourism_score": 4.7,
+      "sunny_rate": 33.4,
+      "tourism_score": 2.8,
       "comfort_label": "偏不舒适"
     },
     "12": {
@@ -178,8 +178,8 @@
       "precip": 7.9,
       "solar": 65699.0,
       "cloud": 4.057795698924731,
-      "sunny_rate": 95.9,
-      "tourism_score": 5.0,
+      "sunny_rate": 33.6,
+      "tourism_score": 3.1,
       "comfort_label": "偏不舒适"
     }
   }

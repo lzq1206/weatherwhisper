@@ -64,9 +64,9 @@ def get_best_time(monthly_json):
     for m, s in monthly_json.items():
         temp = s.get('temp_avg', 0)
         humidity = s.get('humidity', 100)
-        sunny_rate = s.get('sunny_rate', max(0.0, 100.0 - s.get('cloud', 100)))
+        sunny_rate = s.get('sunny_rate', max(0.0, min(100.0, (100.0 - s.get('cloud', 100)) * 0.35)))
         score = s.get('tourism_score', 0)
-        if 18 <= temp <= 28 and 35 <= humidity <= 75 and sunny_rate >= 35 and score >= 6.0:
+        if 18 <= temp <= 28 and 35 <= humidity <= 75 and sunny_rate >= 18 and score >= 5.8:
             best_months.append(int(m))
     
     if not best_months:
@@ -98,7 +98,7 @@ def score_tourism_month(month_stats):
     temp = float(month_stats['temp_avg'])
     humidity = float(month_stats['humidity'])
     cloud = float(month_stats['cloud'])
-    sunny_rate = round(max(0.0, min(100.0, 100.0 - cloud)), 1)
+    sunny_rate = round(max(0.0, min(100.0, (100.0 - cloud) * 0.35)), 1)
 
     # Rough comfort model: temperature near 23°C, humidity near 55%, more sunshine is better.
     temp_score = max(0.0, 1.0 - abs(temp - 23.0) / 13.0)
@@ -106,7 +106,7 @@ def score_tourism_month(month_stats):
     sunny_score = sunny_rate / 100.0
     tourism_score = round((0.45 * temp_score + 0.25 * humidity_score + 0.30 * sunny_score) * 10.0, 1)
 
-    if 18 <= temp <= 28 and 35 <= humidity <= 75 and sunny_rate >= 35:
+    if 18 <= temp <= 28 and 35 <= humidity <= 75 and sunny_rate >= 18:
         comfort_label = '舒适'
     elif 15 <= temp <= 30 and 30 <= humidity <= 80:
         comfort_label = '可接受'
