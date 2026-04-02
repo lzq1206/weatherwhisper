@@ -23,6 +23,8 @@ interface StationData {
     avg_wind: number;
     total_solar: number;
     avg_cloud: number;
+    avg_opaque_cloud?: number;
+    avg_visibility?: number;
     water_temp: number;
     growing_season: number;
     best_time: string;
@@ -41,6 +43,8 @@ interface StationData {
     precip: number;
     solar: number;
     cloud: number;
+    opaque_cloud?: number;
+    visibility?: number;
     sunny_rate?: number;
     tourism_score?: number;
     comfort_label?: string;
@@ -60,7 +64,11 @@ function computeTourismScore(item: { temp_avg: number; humidity: number; cloud: 
   const temp = Number(item.temp_avg);
   const humidity = Number(item.humidity);
   const cloud = Number(item.cloud);
-  const sunnyRate = Math.max(0, Math.min(100, (100 - cloud) * 0.35));
+  const opaqueCloud = Number((item as any).opaque_cloud ?? cloud);
+  const visibility = Number((item as any).visibility ?? 10);
+  const cloudiness = 0.45 * cloud + 0.55 * opaqueCloud;
+  const visibilityBonus = Math.max(0, Math.min(8, (visibility - 5) / 1.5));
+  const sunnyRate = Math.max(0, Math.min(100, (100 - cloudiness) * 0.28 + visibilityBonus * 2.5));
   const tempScore = Math.max(0, 1 - Math.abs(temp - 23) / 13);
   const humidityScore = Math.max(0, 1 - Math.abs(humidity - 55) / 45);
   const sunnyScore = sunnyRate / 100;
@@ -97,6 +105,8 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
               const computed = computeTourismScore(value as any);
               return {
                 month: idx + 1,
+                opaque_cloud: value.opaque_cloud,
+                visibility: value.visibility,
                 sunny_rate: value.sunny_rate ?? computed.sunnyRate,
                 tourism_score: value.tourism_score ?? computed.score,
                 comfort_label: value.comfort_label ?? computed.comfortLabel,
@@ -451,7 +461,7 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
       ? '降水适中'
       : '降水偏少';
 
-  const climateSummary = `${data.metadata.city} 年平均气温约 ${data.yearly.avg_temp.toFixed(1)}°C，属于${climateTone}气候；${precipTone}，${humidityTone}。最热月份通常出现在 ${MONTHS[hottest]}，最冷月份在 ${MONTHS[coldest]}；降水峰值一般在 ${MONTHS[wettest]}，最干燥月份多见于 ${MONTHS[driest]}。全年平均云量约 ${data.yearly.avg_cloud.toFixed(1)}%，晴天率按保守口径估算约 ${Math.max(0, Math.min(100, (100 - data.yearly.avg_cloud) * 0.35)).toFixed(1)}%。`;
+  const climateSummary = `${data.metadata.city} 年平均气温约 ${data.yearly.avg_temp.toFixed(1)}°C，属于${climateTone}气候；${precipTone}，${humidityTone}。最热月份通常出现在 ${MONTHS[hottest]}，最冷月份在 ${MONTHS[coldest]}；降水峰值一般在 ${MONTHS[wettest]}，最干燥月份多见于 ${MONTHS[driest]}。全年平均云量约 ${data.yearly.avg_cloud.toFixed(1)}%，遮蔽云量约 ${data.yearly.avg_opaque_cloud?.toFixed(1) ?? '—'}%，平均能见度约 ${data.yearly.avg_visibility?.toFixed(1) ?? '—'} km。`;
   const visitSummary = `综合温度、湿度和保守晴天率来看，${bestTourismMonths} 更适合到访。全年约有 ${humidMonths} 个月平均湿度在 75% 以上，最佳旅游月得分约 ${bestTourismScore.toFixed(1)}，全年平均旅游分约 ${tourismAvg.toFixed(1)}。`;
   const selectedSummary = selected
     ? `${MONTHS[selectedIndex]} 的均温约 ${selected.temp_avg.toFixed(1)}°C，最高 ${selected.temp_max.toFixed(1)}°C，最低 ${selected.temp_min.toFixed(1)}°C；月降水 ${selected.precip.toFixed(1)} mm，湿度 ${selected.humidity.toFixed(1)}%，云量 ${selected.cloud.toFixed(1)}%，晴天率（保守估算） ${(selected.sunny_rate ?? computeTourismScore(selected).sunnyRate).toFixed(1)}%，旅游评分 ${(selected.tourism_score ?? computeTourismScore(selected).score).toFixed(1)}。`
@@ -462,7 +472,7 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
     { icon: Droplets, label: '年降水量', value: `${data.yearly.total_precip.toFixed(0)} mm`, color: 'text-cyan-300' },
     { icon: Cloud, label: '平均湿度', value: `${data.yearly.avg_humidity.toFixed(1)}%`, color: 'text-emerald-300' },
     { icon: Cloud, label: '平均云量', value: `${data.yearly.avg_cloud.toFixed(1)}%`, color: 'text-amber-300' },
-    { icon: Sun, label: '晴天率', value: `${Math.max(0, Math.min(100, (100 - data.yearly.avg_cloud) * 0.35)).toFixed(1)}%`, color: 'text-sky-300' },
+    { icon: Sun, label: '晴天率', value: `${monthlySorted.length ? (monthlySorted.reduce((sum, item) => sum + (item.sunny_rate ?? computeTourismScore(item).sunnyRate), 0) / monthlySorted.length).toFixed(1) : '—'}%`, color: 'text-sky-300' },
     { icon: Wind, label: '平均风速', value: `${data.yearly.avg_wind.toFixed(2)} m/s`, color: 'text-violet-300' },
     { icon: Sun, label: '太阳辐射', value: `${data.yearly.total_solar.toFixed(0)} kWh/m²`, color: 'text-amber-300' },
     { icon: Waves, label: '水温', value: `${data.yearly.water_temp.toFixed(1)}°C`, color: 'text-blue-300' },
@@ -562,22 +572,32 @@ const ClimateDashboard: React.FC<ClimateDashboardProps> = ({ stationId, selected
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">最晴朗月份</div>
               <div className="mt-2 text-xl font-bold text-white">{MONTHS[clearest]}</div>
-              <div className="mt-1 text-sm text-slate-300">云量约 {monthlySorted[clearest].cloud.toFixed(1)}%</div>
+              <div className="mt-1 text-sm text-slate-300">总云量约 {monthlySorted[clearest].cloud.toFixed(1)}%，遮蔽云量约 {(monthlySorted[clearest].opaque_cloud ?? monthlySorted[clearest].cloud).toFixed(1)}%</div>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">最阴云月份</div>
               <div className="mt-2 text-xl font-bold text-white">{MONTHS[cloudiest]}</div>
-              <div className="mt-1 text-sm text-slate-300">云量约 {monthlySorted[cloudiest].cloud.toFixed(1)}%</div>
+              <div className="mt-1 text-sm text-slate-300">总云量约 {monthlySorted[cloudiest].cloud.toFixed(1)}%，遮蔽云量约 {(monthlySorted[cloudiest].opaque_cloud ?? monthlySorted[cloudiest].cloud).toFixed(1)}%</div>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">全年平均云量</div>
               <div className="mt-2 text-xl font-bold text-white">{data.yearly.avg_cloud.toFixed(1)}%</div>
-              <div className="mt-1 text-sm text-slate-300">对应晴天率约 {Math.max(0, Math.min(100, (100 - data.yearly.avg_cloud) * 0.35)).toFixed(1)}%（保守估算）</div>
+              <div className="mt-1 text-sm text-slate-300">对应晴天率约 {monthlySorted.length ? (monthlySorted.reduce((sum, item) => sum + (item.sunny_rate ?? computeTourismScore(item).sunnyRate), 0) / monthlySorted.length).toFixed(1) : '—'}%（保守估算）</div>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">最佳旅游月</div>
               <div className="mt-2 text-xl font-bold text-white">{MONTHS[bestTourismMonth]}</div>
               <div className="mt-1 text-sm text-slate-300">评分 {monthlySorted[bestTourismMonth].tourism_score.toFixed(1)} / 10</div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">平均遮蔽云量</div>
+              <div className="mt-2 text-xl font-bold text-white">{data.yearly.avg_opaque_cloud?.toFixed(1) ?? '—'}%</div>
+              <div className="mt-1 text-sm text-slate-300">更接近能见度和体感晴朗程度</div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">平均能见度</div>
+              <div className="mt-2 text-xl font-bold text-white">{data.yearly.avg_visibility?.toFixed(1) ?? '—'} km</div>
+              <div className="mt-1 text-sm text-slate-300">能见度高通常更有利于旅游与观景</div>
             </div>
           </div>
         </section>

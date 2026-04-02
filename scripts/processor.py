@@ -98,7 +98,12 @@ def score_tourism_month(month_stats):
     temp = float(month_stats['temp_avg'])
     humidity = float(month_stats['humidity'])
     cloud = float(month_stats['cloud'])
-    sunny_rate = round(max(0.0, min(100.0, (100.0 - cloud) * 0.35)), 1)
+    opaque_cloud = float(month_stats.get('opaque_cloud', cloud))
+    visibility = float(month_stats.get('visibility', 10.0))
+
+    cloudiness = 0.45 * cloud + 0.55 * opaque_cloud
+    visibility_bonus = max(0.0, min(8.0, (visibility - 5.0) / 1.5))
+    sunny_rate = round(max(0.0, min(100.0, (100.0 - cloudiness) * 0.28 + visibility_bonus * 2.5)), 1)
 
     # Rough comfort model: temperature near 23°C, humidity near 55%, more sunshine is better.
     temp_score = max(0.0, 1.0 - abs(temp - 23.0) / 13.0)
@@ -162,6 +167,8 @@ def process_station(epw_path):
                         'Solar': float(parts[13]),
                         'WindSpeed': float(parts[21]),
                         'Cloud': float(parts[22]),
+                        'OpaqueCloud': float(parts[23]) if parts[23] != '999' else float(parts[22]),
+                        'Visibility': float(parts[24]) if parts[24] != '999' else 10.0,
                         'Precip': float(parts[33]) if parts[33] != '999' else 0.0
                     })
                 except Exception:
@@ -178,10 +185,12 @@ def process_station(epw_path):
         'WindSpeed': 'mean',
         'Precip': 'sum',
         'Solar': 'sum',
-        'Cloud': 'mean'
+        'Cloud': 'mean',
+        'OpaqueCloud': 'mean',
+        'Visibility': 'mean'
     })
     
-    monthly_stats.columns = ['temp_avg', 'temp_max', 'temp_min', 'humidity', 'wind', 'precip', 'solar', 'cloud']
+    monthly_stats.columns = ['temp_avg', 'temp_max', 'temp_min', 'humidity', 'wind', 'precip', 'solar', 'cloud', 'opaque_cloud', 'visibility']
     monthly_json = monthly_stats.to_dict(orient='index')
     for m, s in monthly_json.items():
         s.update(score_tourism_month(s))
@@ -199,6 +208,8 @@ def process_station(epw_path):
         "avg_wind": round(float(df['WindSpeed'].mean()), 2),
         "total_solar": round(float(df['Solar'].sum() / 1000), 2), # kWh/m2
         "avg_cloud": round(float(df['Cloud'].mean()), 1),
+        "avg_opaque_cloud": round(float(df['OpaqueCloud'].mean()), 1),
+        "avg_visibility": round(float(df['Visibility'].mean()), 1),
         "growing_season": growing_days,
         "water_temp": round(float(df['Temp'].mean() + 1.5), 1), # Proxy estimation
         "solar_energy": round(float(df['Solar'].sum() / 1000 * 0.15), 2), # Solar potential (15% efficiency)
