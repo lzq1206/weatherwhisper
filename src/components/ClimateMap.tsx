@@ -40,7 +40,6 @@ const METRICS = [
 const ClimateMap: React.FC<ClimateMapProps> = ({ onStationSelect, selectedMonth, selectedStationId }) => {
   const [data, setData] = useState<StationFeature[]>([]);
   const [metric, setMetric] = useState('avg_temp');
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
   useEffect(() => {
     fetch(`${BASE_PATH}/data/stations.geojson`)
@@ -57,13 +56,6 @@ const ClimateMap: React.FC<ClimateMapProps> = ({ onStationSelect, selectedMonth,
       .catch(err => console.error('Failed to load stations:', err));
   }, []);
 
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    const applyTheme = () => setTheme(mq.matches ? 'dark' : 'light');
-    applyTheme();
-    mq.addEventListener('change', applyTheme);
-    return () => mq.removeEventListener('change', applyTheme);
-  }, []);
 
   const currentMetric = METRICS.find(item => item.id === metric) || METRICS[0];
   const selectedFeature = useMemo(
@@ -176,10 +168,7 @@ const ClimateMap: React.FC<ClimateMapProps> = ({ onStationSelect, selectedMonth,
       >
         <Map
           style={{ width: '100%', height: '100%' }}
-          mapStyle={theme === 'dark'
-            ? 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'
-            : 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'
-          }
+          mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
         />
       </DeckGL>
     </section>
